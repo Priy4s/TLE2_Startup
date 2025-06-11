@@ -8,12 +8,17 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::resource('workspaces', WorkspaceController::class)->middleware('auth');
+Route::get('/lootbox', function () {
+    return view('lootbox');
+});
+
+//Route::resource('workspaces', WorkspaceController::class)->middleware('auth');
 
 
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
