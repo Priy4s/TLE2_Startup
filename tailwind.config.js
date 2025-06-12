@@ -16,6 +16,7 @@ export default {
         extend: {
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                helvetica: ['Helvetica']
             },
             colors: {
                 'greenLight' : '#EDF6F7',
