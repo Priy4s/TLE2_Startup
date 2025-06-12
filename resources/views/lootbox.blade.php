@@ -57,7 +57,7 @@
         const videoContainer = document.getElementById("videoContainer");
         const video = document.getElementById("lootboxVideo");
 
-        video.src = "/media/video/ChestOpening.mp4";
+        video.src = "images/ChestOpening.mp4";
         console.log("video playing");
         videoContainer.style.display = "flex";
 
