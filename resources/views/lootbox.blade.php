@@ -12,6 +12,10 @@
 <p id="timer"></p>
 <button id="claimBtn" style="display: none;">Claim Lootbox</button>
 
+<div id="videoContainer" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0,0,0,0.8); justify-content: center; align-items: center; z-index: 9999;">
+    <video id="lootboxVideo" width="600" autoplay></video>
+</div>
+
 <script>
     const timer = document.getElementById("timer");
     const claimBtn = document.getElementById("claimBtn");
@@ -24,7 +28,7 @@
 
     function setNextLootboxTime() {
         const now = new Date().getTime();
-        const nextTime = now + 10 * 60 * 1000; //Dit is nu een 10 minuten timer in miliseconden
+        const nextTime = now + 10 //* 60 * 1000; Dit is nu een 10 minuten timer in miliseconden
         localStorage.setItem("lastClaimed", nextTime.toString()); //, pas aan naar bijv +5 om meteen een "lootbox" te ontvangen voor testing
         return nextTime; // pas aan naar 24 uur voor production (now + 24 * 60 * 60 * 1000)
     }
@@ -49,9 +53,27 @@
         }
     }
 
+    function showLootboxAnimation() {
+        const videoContainer = document.getElementById("videoContainer");
+        const video = document.getElementById("lootboxVideo");
+
+        video.src = "/media/video/ChestOpening.mp4";
+        console.log("video playing");
+        videoContainer.style.display = "flex";
+
+        video.play();
+
+        video.onended = () => {
+            videoContainer.style.display = "none";
+            video.src = "";
+        };
+    }
+
+
     claimBtn.addEventListener("click", () => {
         countDownDate = setNextLootboxTime();  //
         updateTimer();
+        showLootboxAnimation();
     });
 </script>
 </body>
