@@ -22,6 +22,7 @@ export default {
                 'viridian' : '#0D2F2C',
                 'accentBlue' : '#2B6561',
                 'accentGreen' : '#4FB477',
+                'articleBlue' : '#CCE2E4',
             }
         },
     },
