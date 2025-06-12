@@ -19,7 +19,7 @@
                                     <!-- Disconnect Button -->
                                     <form method="POST" action="{{ route('google.disconnect') }}">
                                         @csrf
-                                        <button type="submit" class="px-3 py-1 text-sm bg-black text-white hover:bg-gray-800 rounded">
+                                        <button type="submit" class="px-3 py-1 text-sm bg-black text-red-600 hover:bg-gray-800 rounded">
                                             Disconnect
                                         </button>
                                     </form>
@@ -27,7 +27,7 @@
                             @else
                                 <!-- Connect Button -->
                                 <a href="{{ route('google.login') }}"
-                                   class="px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800">
+                                   class="px-4 py-2 bg-black text-green-600 rounded-md hover:bg-gray-800">
                                     <i class="fab fa-google-drive mr-2"></i>Connect Google Drive
                                 </a>
                             @endif
