@@ -16,12 +16,14 @@ export default {
         extend: {
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                helvetica: ['Helvetica']
             },
             colors: {
                 'greenLight' : '#EDF6F7',
                 'viridian' : '#0D2F2C',
                 'accentBlue' : '#2B6561',
                 'accentGreen' : '#4FB477',
+                'articleBlue' : '#CCE2E4',
             }
         },
     },
