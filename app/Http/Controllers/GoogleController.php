@@ -131,8 +131,15 @@ class GoogleController extends Controller
         $provider = 'google';
 
         $cached = CloudFile::where('user_id', $user->id)
-            ->where('provider', $provider)
-            ->get();
+            ->where('provider', $provider);
+
+        // Apply search filter if query is provided
+        if ($request->has('search')) {
+            $search = $request->input('search');
+            $cached->where('name', 'like', '%' . $search . '%');
+        }
+
+        $cached = $cached->get();
 
         // Only force sync if cache empty OR sync=1 param present
         $shouldSync = $cached->isEmpty() || $request->has('sync');
