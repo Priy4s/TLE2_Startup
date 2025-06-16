@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Google\Service\Drive;
+use App\Models\CloudFile;
+use Carbon\Carbon;
 
 
 class GoogleController extends Controller
@@ -50,6 +52,13 @@ class GoogleController extends Controller
     public function disconnectGoogle()
     {
         $user = Auth::user();
+
+        // Delete cached Google files
+        CloudFile::where('user_id', $user->id)
+            ->where('provider', 'google')
+            ->delete();
+
+        // Clear Google tokens
         $user->update([
             'google_access_token' => null,
             'google_refresh_token' => null,
@@ -58,9 +67,10 @@ class GoogleController extends Controller
 
         return redirect()->route('profile.edit')->with([
             'status' => 'google-disconnected',
-            'message' => 'Google Drive disconnected'
+            'message' => 'Google Drive disconnected and cached files removed'
         ]);
     }
+
 
     // Helper: Create Google client instance
     private function getGoogleClient()
@@ -115,16 +125,54 @@ class GoogleController extends Controller
         }
     }
 
-    public function showDriveFiles()
+    public function showDriveFiles(Request $request)
     {
-        $client = new Client();
-        $client->setAccessToken(auth()->user()->google_access_token);
+        $user = Auth::user();
+        $provider = 'google';
 
-        $service = new Drive($client);
-        $files = $service->files->listFiles([
-            'fields' => 'files(id, name, mimeType, webViewLink)',
-        ]);
+        $cached = CloudFile::where('user_id', $user->id)
+            ->where('provider', $provider)
+            ->get();
 
-        return view('alldocuments.documents-overview', ['files' => $files->getFiles()]);
+        // Only force sync if cache empty OR sync=1 param present
+        $shouldSync = $cached->isEmpty() || $request->has('sync');
+
+        if ($shouldSync) {
+            // Fetch fresh files from Google Drive API
+            $client = new \Google\Client();
+            $client->setAccessToken($user->google_access_token);
+            $service = new \Google\Service\Drive($client);
+
+            $files = $service->files->listFiles([
+                'fields' => 'files(id, name, mimeType, webViewLink)',
+            ])->getFiles();
+
+            foreach ($files as $file) {
+                CloudFile::updateOrCreate(
+                    ['user_id' => $user->id, 'file_id' => $file->id, 'provider' => $provider],
+                    [
+                        'name' => $file->name,
+                        'mime_type' => $file->mimeType,
+                        'web_view_link' => $file->webViewLink,
+                        'synced_at' => now()
+                    ]
+                );
+            }
+
+            // Reload cache
+            $cached = CloudFile::where('user_id', $user->id)
+                ->where('provider', $provider)
+                ->get();
+        }
+
+        // If sync was triggered by ?sync=1, redirect to clean URL to avoid re-sync on refresh
+        if ($request->has('sync')) {
+            return redirect()->route('documents.overview');
+        }
+
+        return view('alldocuments.documents-overview', ['files' => $cached]);
     }
+
+
+
 }

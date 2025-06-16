@@ -48,4 +48,11 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    protected static function booted()
+    {
+        static::deleting(function ($user) {
+            CloudFile::where('user_id', $user->id)->delete();
+        });
+    }
+
 }

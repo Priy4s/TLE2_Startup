@@ -9,10 +9,10 @@
     'name' => 'Laravel',
     'env' => 'local',
     'debug' => true,
-    'url' => 'http://localhost',
+    'url' => 'http://localhost/',
     'frontend_url' => 'http://localhost:3000',
     'asset_url' => NULL,
-    'timezone' => 'UTC',
+    'timezone' => 'CET',
     'locale' => 'en',
     'fallback_locale' => 'en',
     'faker_locale' => 'en_US',
@@ -157,8 +157,8 @@
       'file' => 
       array (
         'driver' => 'file',
-        'path' => 'C:\\CMGT\\Jaar_2\\TLE2_Startup\\storage\\framework/cache/data',
-        'lock_path' => 'C:\\CMGT\\Jaar_2\\TLE2_Startup\\storage\\framework/cache/data',
+        'path' => 'C:\\Users\\priya\\Documents\\tle2_deel2\\storage\\framework/cache/data',
+        'lock_path' => 'C:\\Users\\priya\\Documents\\tle2_deel2\\storage\\framework/cache/data',
       ),
       'memcached' => 
       array (
@@ -206,14 +206,14 @@
   ),
   'database' => 
   array (
-    'default' => 'mysql',
+    'default' => 'sqlite',
     'connections' => 
     array (
       'sqlite' => 
       array (
         'driver' => 'sqlite',
         'url' => NULL,
-        'database' => 'tactiq',
+        'database' => 'C:\\Users\\priya\\Documents\\tle2_deel2\\database\\database.sqlite',
         'prefix' => '',
         'foreign_key_constraints' => true,
         'busy_timeout' => NULL,
@@ -224,9 +224,9 @@
       array (
         'driver' => 'mysql',
         'url' => NULL,
-        'host' => 'localhost',
+        'host' => '127.0.0.1',
         'port' => '3306',
-        'database' => 'tactiq',
+        'database' => 'C:\\Users\\priya\\Documents\\tle2_deel2\\database\\database.sqlite',
         'username' => 'root',
         'password' => '',
         'unix_socket' => '',
@@ -244,9 +244,9 @@
       array (
         'driver' => 'mariadb',
         'url' => NULL,
-        'host' => 'localhost',
+        'host' => '127.0.0.1',
         'port' => '3306',
-        'database' => 'tactiq',
+        'database' => 'C:\\Users\\priya\\Documents\\tle2_deel2\\database\\database.sqlite',
         'username' => 'root',
         'password' => '',
         'unix_socket' => '',
@@ -264,9 +264,9 @@
       array (
         'driver' => 'pgsql',
         'url' => NULL,
-        'host' => 'localhost',
-        'port' => '3306',
-        'database' => 'tactiq',
+        'host' => '127.0.0.1',
+        'port' => '5432',
+        'database' => 'C:\\Users\\priya\\Documents\\tle2_deel2\\database\\database.sqlite',
         'username' => 'root',
         'password' => '',
         'charset' => 'utf8',
@@ -280,8 +280,8 @@
         'driver' => 'sqlsrv',
         'url' => NULL,
         'host' => 'localhost',
-        'port' => '3306',
-        'database' => 'tactiq',
+        'port' => '1433',
+        'database' => 'C:\\Users\\priya\\Documents\\tle2_deel2\\database\\database.sqlite',
         'username' => 'root',
         'password' => '',
         'charset' => 'utf8',
@@ -330,15 +330,15 @@
       'local' => 
       array (
         'driver' => 'local',
-        'root' => 'C:\\CMGT\\Jaar_2\\TLE2_Startup\\storage\\app/private',
+        'root' => 'C:\\Users\\priya\\Documents\\tle2_deel2\\storage\\app/private',
         'serve' => true,
         'throw' => false,
       ),
       'public' => 
       array (
         'driver' => 'local',
-        'root' => 'C:\\CMGT\\Jaar_2\\TLE2_Startup\\storage\\app/public',
-        'url' => 'http://localhost/storage',
+        'root' => 'C:\\Users\\priya\\Documents\\tle2_deel2\\storage\\app/public',
+        'url' => 'http://localhost//storage',
         'visibility' => 'public',
         'throw' => false,
       ),
@@ -357,7 +357,7 @@
     ),
     'links' => 
     array (
-      'C:\\CMGT\\Jaar_2\\TLE2_Startup\\public\\storage' => 'C:\\CMGT\\Jaar_2\\TLE2_Startup\\storage\\app/public',
+      'C:\\Users\\priya\\Documents\\tle2_deel2\\public\\storage' => 'C:\\Users\\priya\\Documents\\tle2_deel2\\storage\\app/public',
     ),
   ),
   'logging' => 
@@ -382,14 +382,14 @@
       'single' => 
       array (
         'driver' => 'single',
-        'path' => 'C:\\CMGT\\Jaar_2\\TLE2_Startup\\storage\\logs/laravel.log',
+        'path' => 'C:\\Users\\priya\\Documents\\tle2_deel2\\storage\\logs/laravel.log',
         'level' => 'debug',
         'replace_placeholders' => true,
       ),
       'daily' => 
       array (
         'driver' => 'daily',
-        'path' => 'C:\\CMGT\\Jaar_2\\TLE2_Startup\\storage\\logs/laravel.log',
+        'path' => 'C:\\Users\\priya\\Documents\\tle2_deel2\\storage\\logs/laravel.log',
         'level' => 'debug',
         'days' => 14,
         'replace_placeholders' => true,
@@ -454,7 +454,7 @@
       ),
       'emergency' => 
       array (
-        'path' => 'C:\\CMGT\\Jaar_2\\TLE2_Startup\\storage\\logs/laravel.log',
+        'path' => 'C:\\Users\\priya\\Documents\\tle2_deel2\\storage\\logs/laravel.log',
       ),
     ),
   ),
@@ -530,7 +530,7 @@
       'theme' => 'default',
       'paths' => 
       array (
-        0 => 'C:\\CMGT\\Jaar_2\\TLE2_Startup\\resources\\views/vendor/mail',
+        0 => 'C:\\Users\\priya\\Documents\\tle2_deel2\\resources\\views/vendor/mail',
       ),
     ),
   ),
@@ -584,13 +584,13 @@
     ),
     'batching' => 
     array (
-      'database' => 'mysql',
+      'database' => 'sqlite',
       'table' => 'job_batches',
     ),
     'failed' => 
     array (
       'driver' => 'database-uuids',
-      'database' => 'mysql',
+      'database' => 'sqlite',
       'table' => 'failed_jobs',
     ),
   ),
@@ -631,7 +631,7 @@
     'lifetime' => '120',
     'expire_on_close' => false,
     'encrypt' => false,
-    'files' => 'C:\\CMGT\\Jaar_2\\TLE2_Startup\\storage\\framework/sessions',
+    'files' => 'C:\\Users\\priya\\Documents\\tle2_deel2\\storage\\framework/sessions',
     'connection' => NULL,
     'table' => 'sessions',
     'store' => NULL,
@@ -757,9 +757,9 @@
   array (
     'paths' => 
     array (
-      0 => 'C:\\CMGT\\Jaar_2\\TLE2_Startup\\resources\\views',
+      0 => 'C:\\Users\\priya\\Documents\\tle2_deel2\\resources\\views',
     ),
-    'compiled' => 'C:\\CMGT\\Jaar_2\\TLE2_Startup\\storage\\framework\\views',
+    'compiled' => 'C:\\Users\\priya\\Documents\\tle2_deel2\\storage\\framework\\views',
   ),
   'tinker' => 
   array (
