@@ -68,7 +68,7 @@
             </thead>
             <?php
                 $daysInMonth = now()->daysInMonth;
-                $firstDayOfMonth = now()->startOfMonth()->dayOfWeek; // 0 = Sunday, 1 = Monday, etc.
+                $firstDayOfMonth = now()->startOfMonth()->dayOfWeek;
             ?>
 
             <tbody>
@@ -90,7 +90,17 @@
                                     </div>
                                     <div class="bottom flex-grow h-30 py-1 w-full cursor-pointer">
                                         <?php $__currentLoopData = $events; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $event): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                            <?php if($event->date == $currentDate): ?>
+                                            <?php echo e(dump($event->date)); ?>
+
+                                            <?php
+                                                $eventDate = \Carbon\Carbon::createFromTimestamp($event->date);
+                                            ?>
+                                            <?php echo e(dump($eventDate)); ?>
+
+                                            <?php echo e(dump($currentDate)); ?>
+
+
+                                            <?php if($eventDate == $currentDate): ?>
                                                 <div class="event bg-purple-400 text-white rounded p-1 text-sm mb-1">
                                                     <span class="event-name"><?php echo e($event->event); ?></span>
                                                 </div>

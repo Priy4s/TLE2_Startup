@@ -15,8 +15,7 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->string('event')->nullable();
-            $table->date('date');
-            $table->time('time');
+            $table->dateTime('date');
         });
     }
 

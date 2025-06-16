@@ -58,7 +58,7 @@
             </thead>
             @php
                 $daysInMonth = now()->daysInMonth;
-                $firstDayOfMonth = now()->startOfMonth()->dayOfWeek; // 0 = Sunday, 1 = Monday, etc.
+                $firstDayOfMonth = now()->startOfMonth()->dayOfWeek;
             @endphp
 
             <tbody>
@@ -80,7 +80,14 @@
                                     </div>
                                     <div class="bottom flex-grow h-30 py-1 w-full cursor-pointer">
                                         @foreach ($events as $event)
-                                            @if ($event->date == $currentDate)
+                                            {{ dump($event->date) }}
+                                            @php
+                                                $eventDate = \Carbon\Carbon::createFromTimestamp($event->date);
+                                            @endphp
+                                            {{ dump($eventDate) }}
+                                            {{ dump($currentDate) }}
+
+                                            @if ($eventDate == $currentDate)
                                                 <div class="event bg-purple-400 text-white rounded p-1 text-sm mb-1">
                                                     <span class="event-name">{{ $event->event }}</span>
                                                 </div>

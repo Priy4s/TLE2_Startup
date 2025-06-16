@@ -29,7 +29,17 @@ class CalendarController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'event' => 'required|string|max:255',
+            'date' => 'required|date',
+        ]);
+
+        Calendar::create([
+            'event' => $request->event,
+            'date' => $request->date,
+        ]);
+
+        return redirect()->back();
     }
 
     /**
