@@ -1,5 +1,5 @@
 <x-nav>
-    <h1>Bewerk workspace</h1>
+    <h1 class="text-6xl font-bold">Edit Workspace</h1>
     <form method="POST" action="{{ route('workspaces.update', $workspace) }}">
         @csrf
         @method('PUT')

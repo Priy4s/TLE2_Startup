@@ -1,5 +1,4 @@
-
-        <!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -42,7 +41,7 @@
         <?php endif; ?>
     </div>
 </nav>
-<main class="min-h-full m-6">
+<main class="min-h-full m-8">
     <?php echo e($slot); ?>
 
 </main>
