@@ -36,9 +36,9 @@
     </div>
     <div>
         @auth
-            <p>Profile</p>
+            <a href="{{ route('profile.edit') }}" class="font-medium text-3xl">Profile</a>
         @else
-            <p>Login</p>
+            <a href="{{ route('login') }}" class="font-medium text-3xl">Login</a>
         @endauth
     </div>
 </nav>

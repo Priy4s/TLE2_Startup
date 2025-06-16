@@ -56,7 +56,7 @@ class GoogleController extends Controller
             'google_id' => null
         ]);
 
-        return redirect()->route('profile')->with([
+        return redirect()->route('profile.edit')->with([
             'status' => 'google-disconnected',
             'message' => 'Google Drive disconnected'
         ]);
