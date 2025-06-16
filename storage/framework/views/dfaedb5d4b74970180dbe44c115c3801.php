@@ -1,10 +1,20 @@
-<x-nav>
+<?php if (isset($component)) { $__componentOriginalff09156f73c896030ee75284e9b2c466 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalff09156f73c896030ee75284e9b2c466 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.nav','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('nav'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
 
 <div class="container mx-auto mt-10">
     <div class="wrapper bg-white rounded shadow w-full ">
         <div class="header flex justify-between border-b p-2">
         <span class="text-lg font-bold">
-          {{ now()->format('F Y') }}
+          <?php echo e(now()->format('F Y')); ?>
+
         </span>
             <div class="buttons">
                 <button class="p-1">
@@ -56,46 +66,55 @@
                 </th>
             </tr>
             </thead>
-            @php
+            <?php
                 $daysInMonth = now()->daysInMonth;
                 $firstDayOfMonth = now()->startOfMonth()->dayOfWeek; // 0 = Sunday, 1 = Monday, etc.
-            @endphp
+            ?>
 
             <tbody>
-            @for ($week = 0; $week < ceil(($daysInMonth + $firstDayOfMonth) / 7); $week++)
+            <?php for($week = 0; $week < ceil(($daysInMonth + $firstDayOfMonth) / 7); $week++): ?>
                 <tr class="text-center h-20">
-                    @for ($day = 0; $day < 7; $day++)
-                        @php
+                    <?php for($day = 0; $day < 7; $day++): ?>
+                        <?php
                             $currentDay = $week * 7 + $day - $firstDayOfMonth + 1;
                             $currentDate = ($currentDay > 0 && $currentDay <= $daysInMonth)
                                 ? now()->startOfMonth()->addDays($currentDay - 1)->toDateString()
                                 : null;
-                        @endphp
+                        ?>
 
                         <td class="border p-1 h-40 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 overflow-auto transition cursor-pointer duration-500 ease hover:bg-gray-300">
-                            @if ($currentDay > 0 && $currentDay <= $daysInMonth)
+                            <?php if($currentDay > 0 && $currentDay <= $daysInMonth): ?>
                                 <div class="flex flex-col h-40 mx-auto xl:w-40 lg:w-30 md:w-30 sm:w-full w-10 mx-auto overflow-hidden">
                                     <div class="top h-5 w-full">
-                                        <span class="text-gray-500">{{ $currentDay }}</span>
+                                        <span class="text-gray-500"><?php echo e($currentDay); ?></span>
                                     </div>
                                     <div class="bottom flex-grow h-30 py-1 w-full cursor-pointer">
-                                        @foreach ($events as $event)
-                                            @if ($event->date == $currentDate)
+                                        <?php $__currentLoopData = $events; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $event): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                            <?php if($event->date == $currentDate): ?>
                                                 <div class="event bg-purple-400 text-white rounded p-1 text-sm mb-1">
-                                                    <span class="event-name">{{ $event->event }}</span>
+                                                    <span class="event-name"><?php echo e($event->event); ?></span>
                                                 </div>
-                                            @endif
-                                        @endforeach
+                                            <?php endif; ?>
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                     </div>
                                 </div>
-                            @endif
+                            <?php endif; ?>
                         </td>
-                    @endfor
+                    <?php endfor; ?>
                 </tr>
-            @endfor
+            <?php endfor; ?>
             </tbody>
         </table>
     </div>
 </div>
 
-</x-nav>
+ <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalff09156f73c896030ee75284e9b2c466)): ?>
+<?php $attributes = $__attributesOriginalff09156f73c896030ee75284e9b2c466; ?>
+<?php unset($__attributesOriginalff09156f73c896030ee75284e9b2c466); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalff09156f73c896030ee75284e9b2c466)): ?>
+<?php $component = $__componentOriginalff09156f73c896030ee75284e9b2c466; ?>
+<?php unset($__componentOriginalff09156f73c896030ee75284e9b2c466); ?>
+<?php endif; ?><?php /**PATH C:\CMGT\Jaar_2\TLE2_Startup\resources\views/calendar/index.blade.php ENDPATH**/ ?>

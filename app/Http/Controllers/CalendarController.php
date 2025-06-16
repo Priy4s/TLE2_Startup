@@ -3,15 +3,17 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Calendar;
+use Illuminate\Support\Carbon;
 
 class CalendarController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        return view('calendar.index');
+        $events = Calendar::all();
+        $currentMonth = Carbon::now()->format('F Y');
+
+        return view('calendar.index', compact('events', 'currentMonth'));
     }
 
     /**

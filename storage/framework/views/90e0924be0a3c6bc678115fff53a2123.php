@@ -48,4 +48,4 @@
 </main>
 </body>
 </html>
-<?php /**PATH C:\Users\Senna\CMGT Jaar 2\TLE2_Startup\resources\views/components/nav.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\CMGT\Jaar_2\TLE2_Startup\resources\views/components/nav.blade.php ENDPATH**/ ?>
