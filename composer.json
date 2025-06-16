@@ -8,11 +8,14 @@
     "require": {
         "php": "^8.2",
         "laravel/framework": "^11.31",
-        "laravel/tinker": "^2.9"
+        "laravel/tinker": "^2.9",
+        "league/oauth2-client": "^2.8.1",
+        "microsoft/kiota-http-guzzle": "^1.5",
+        "microsoft/microsoft-graph": "^1.9"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
-        "laravel/breeze": "^2.2",
+        "laravel/breeze": "^2.3",
         "laravel/pail": "^1.1",
         "laravel/pint": "^1.13",
         "laravel/sail": "^1.26",
@@ -56,7 +59,7 @@
     },
     "extra": {
         "laravel": {
-            "dont-discover": []
+            "dont-discover": ["*"]
         }
     },
     "config": {
@@ -65,7 +68,8 @@
         "sort-packages": true,
         "allow-plugins": {
             "pestphp/pest-plugin": true,
-            "php-http/discovery": true
+            "php-http/discovery": false,
+            "tbachert/spi": false
         }
     },
     "minimum-stability": "stable",
