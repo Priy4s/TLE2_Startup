@@ -12,7 +12,8 @@
         "laravel/tinker": "^2.9",
         "league/oauth2-client": "^2.8.1",
         "microsoft/kiota-http-guzzle": "^1.5",
-        "microsoft/microsoft-graph": "^1.9"
+        "microsoft/microsoft-graph": "^1.9",
+        "google/apiclient": "^2.18"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
@@ -60,7 +61,7 @@
     },
     "extra": {
         "laravel": {
-            "dont-discover": ["*"]
+            "dont-discover": []
         }
     },
     "config": {
@@ -69,7 +70,7 @@
         "sort-packages": true,
         "allow-plugins": {
             "pestphp/pest-plugin": true,
-            "php-http/discovery": false,
+            "php-http/discovery": true,
             "tbachert/spi": false
         }
     },

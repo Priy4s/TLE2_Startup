@@ -27,6 +27,29 @@
                                 </a>
                             @endif
                         </div>
+                        <div class="mt-4 flex items-center">
+                            @if(auth()->user()->microsoft_refresh_token)
+                                {{-- Als de gebruiker verbonden is --}}
+                                <div class="flex items-center space-x-4">
+            <span class="text-green-600">
+                <i class="fab fa-microsoft mr-2"></i>Verbonden met Microsoft
+            </span>
+
+                                    <form method="POST" action="{{ route('microsoft.disconnect') }}">
+                                        @csrf
+                                        <button type="submit" class="px-3 py-1 text-sm bg-black text-red-600 hover:bg-gray-800 rounded">
+                                            Verbinding verbreken
+                                        </button>
+                                    </form>
+                                </div>
+                            @else
+                                {{-- Als de gebruiker niet verbonden is --}}
+                                <a href="{{ route('microsoft.login') }}"
+                                   class="px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800">
+                                    <i class="fab fa-microsoft mr-2"></i>Verbinden met Microsoft
+                                </a>
+                            @endif
+                        </div>
                         @include('profile.partials.update-profile-information-form')
                     </div>
                 </div>

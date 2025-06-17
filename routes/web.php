@@ -13,12 +13,16 @@ use App\Services\MicrosoftGraphService;
 
 
 
+// in routes/web.php
+
+// Microsoft routes
 Route::get('/microsoft/login', [MicrosoftController::class, 'redirectToProvider'])->name('microsoft.login');
 Route::get('/microsoft/callback', [MicrosoftController::class, 'handleProviderCallback'])->name('microsoft.callback');
-Route::get('/dashboard', [MicrosoftController::class, 'showDocuments'])->name('microsoft.dashboard');
-Route::get('/microsoft/dashboard', [MicrosoftController::class, 'showDashboard'])->name('microsoft.dashboard');
-Route::get('/microsoft/emails', [MicrosoftController::class, 'showEmails'])->name('microsoft.emails')->middleware('auth');
+Route::post('/microsoft/disconnect', [MicrosoftController::class, 'disconnect'])->name('microsoft.disconnect');
+Route::get('/microsoft/check', [MicrosoftController::class, 'checkConnection'])->name('microsoft.check')->middleware('auth');
 
+// Route om de Microsoft documenten te tonen (pas 'documents.microsoft' aan naar je wens)
+Route::get('/documents/microsoft', [MicrosoftController::class, 'showDriveFiles'])->name('documents.microsoft');
 Route::get('/debug-token', function () {
     return session('ms_token') ?: 'Geen token gevonden';
 });

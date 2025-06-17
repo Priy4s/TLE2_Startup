@@ -2,133 +2,140 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CloudFile;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use League\OAuth2\Client\Provider\GenericProvider;
-use Microsoft\Graph\Model;
+use Microsoft\Graph\Graph;
+use Microsoft\Graph\Model\User as GraphUser;
 
 class MicrosoftController extends Controller
 {
     protected $oauthClient;
+    protected $scopes = 'openid profile email offline_access User.Read Files.ReadWrite.All';
 
     public function __construct()
     {
-
-
-        $tenantId = 'common';
-        $clientId = env('AZURE_CLIENT_ID');
-        $clientSecret = env('AZURE_CLIENT_SECRET');
-        $redirectUri = env('AZURE_REDIRECT_URI');
-
-        if (!$tenantId || !$clientId || !$clientSecret || !$redirectUri) {
-            throw new \Exception("Azure AD configuratie ontbreekt in .env");
-        }
-
         $this->oauthClient = new GenericProvider([
-            'clientId'                => $clientId,
-            'clientSecret'            => $clientSecret,
-            'redirectUri'             => $redirectUri,
-            'urlAuthorize'            => "https://login.microsoftonline.com/$tenantId/oauth2/v2.0/authorize",
-            'urlAccessToken'          => "https://login.microsoftonline.com/$tenantId/oauth2/v2.0/token",
+            'clientId'                => config('services.microsoft.client_id'),
+            'clientSecret'            => config('services.microsoft.client_secret'),
+            'redirectUri'             => config('services.microsoft.redirect'),
+            'urlAuthorize'            => 'https://login.microsoftonline.com/' . config('services.microsoft.tenant', 'common') . '/oauth2/v2.0/authorize',
+            'urlAccessToken'          => 'https://login.microsoftonline.com/' . config('services.microsoft.tenant', 'common') . '/oauth2/v2.0/token',
             'urlResourceOwnerDetails' => '',
         ]);
     }
 
-    // Stap 1: stuur gebruiker naar Microsoft login
-    public function redirectToProvider(Request $request)
+    public function redirectToProvider()
     {
-        // AANGEPAST: We vragen nu ook schrijfrechten voor bestanden.
-        $authUrl = $this->oauthClient->getAuthorizationUrl([
-            'scope' => 'User.Read Files.ReadWrite.All',
-            'response_mode' => 'query',
-        ]);
-
+        $authUrl = $this->oauthClient->getAuthorizationUrl(['scope' => $this->scopes]);
         session(['oauth2state' => $this->oauthClient->getState()]);
-
         return redirect()->away($authUrl);
     }
 
-    // Stap 2: callback verwerken, token ophalen en opslaan
     public function handleProviderCallback(Request $request)
     {
-        if (!$request->has('code')) {
-            // TIJDELIJKE DEBUG STAP: Toon alle parameters die we van Microsoft terugkrijgen.
-            // Als je een fout krijgt, haal dan de '//' voor de volgende regel weg.
-            // dd($request->all());
-            abort(400, 'Authorization code ontbreekt. Mogelijk een configuratiefout in Azure of .env');
-        }
-
-        $sessionState = session('oauth2state');
-        $requestState = $request->input('state');
-
-        if (empty($requestState) || ($requestState !== $sessionState)) {
+        if (empty($request->input('state')) || ($request->input('state') !== session('oauth2state'))) {
             session()->forget('oauth2state');
-            abort(400, 'Ongeldige state parameter');
+            abort(400, 'Invalid state');
         }
 
         try {
             $accessToken = $this->oauthClient->getAccessToken('authorization_code', [
                 'code' => $request->input('code'),
+                'scope' => $this->scopes
             ]);
 
-            session([
-                'ms_token' => $accessToken->getToken(),
-                'ms_refresh_token' => $accessToken->getRefreshToken(),
-                'ms_token_expiry' => $accessToken->getExpires(),
-            ]);
+            $this->saveMicrosoftTokens(Auth::user(), $accessToken);
 
-            \Log::info('Access token scopes:', ['scopes' => $accessToken->getValues()['scope'] ?? '']);
-            session()->forget('oauth2state');
-
-            return redirect()->route('microsoft.dashboard');
+            return redirect()->route('profile.edit')->with('status', 'Microsoft account succesvol gekoppeld!');
 
         } catch (\Exception $e) {
-            \Log::error('Token exchange failed', ['error_message' => $e->getMessage()]);
-            return redirect('/')->withErrors('Login fout: ' . $e->getMessage());
+            Log::error('Microsoft token exchange failed: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
+            return redirect()->route('profile.edit')->withErrors(['microsoft_error' => 'Kon Microsoft account niet koppelen: ' . $e->getMessage()]);
         }
     }
 
-    // Dashboard tonen met gebruikersinfo en OneDrive-bestanden
-    public function showDashboard(Request $request)
+    public function checkConnection()
     {
-        if (!$accessToken = session('ms_token')) {
-            return redirect()->route('microsoft.login');
-        }
-
         try {
-            $graphService = new \App\Services\MicrosoftGraphService($accessToken);
-            $graph = $graphService->getGraph();
-
-            // 1. Haal de gebruikersinformatie op voor de naam
-            $user = $graph->createRequest('GET', '/me')
-                ->setReturnType(Model\User::class)
-                ->execute();
-
-            // 2. (NIEUW) Haal de bestanden en mappen op uit de root van OneDrive
-            $files = $graph->createRequest('GET', '/me/drive/root/children')
-                ->setReturnType(Model\DriveItem::class)
-                ->execute();
-
-            // 3. (NIEUW) Geef gebruiker én bestanden door aan de view
-            return view('microsoft.dashboard', [
-                'user' => $user,
-                'files' => $files,
-            ]);
-
-        } catch (\Exception $e) {
-            \Log::error('Graph Error', [
-                'error' => $e->getMessage(),
-                'code' => $e->getCode()
-            ]);
-
-            if ($e->getCode() == 401) {
-                session()->forget('ms_token');
-                return redirect()->route('microsoft.login')->with('error', 'Sessie verlopen, log opnieuw in.');
+            $user = Auth::user();
+            if (!$user->microsoft_refresh_token) {
+                return response()->json(['connected' => false]);
             }
 
-            abort(500, "Fout bij ophalen van data uit Microsoft Graph: " . $e->getMessage());
+            if (time() >= $user->microsoft_token_expiry) {
+                $newAccessToken = $this->refreshMicrosoftToken($user);
+                if (!$newAccessToken) {
+                    return response()->json(['connected' => false, 'reason' => 'Token refresh failed']);
+                }
+                $accessToken = $newAccessToken;
+            } else {
+                $accessToken = $user->microsoft_access_token;
+            }
+
+            $graph = new Graph();
+            $graph->setAccessToken($accessToken);
+            // GECORRIGEERD: Een dollarteken '$' toegevoegd voor select
+            $graphUser = $graph->createRequest('GET', '/me?$select=userPrincipalName')->setReturnType(GraphUser::class)->execute();
+
+            return response()->json([
+                'connected' => true,
+                'email' => $graphUser->getUserPrincipalName()
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Microsoft connection check failed: ' . $e->getMessage());
+            try {
+                $refreshedToken = $this->refreshMicrosoftToken(Auth::user());
+                return response()->json(['connected' => !!$refreshedToken, 'refreshed' => true]);
+            } catch (\Exception $refreshError) {
+                return response()->json(['connected' => false, 'reason' => 'Connection check and refresh failed']);
+            }
         }
     }
 
+    public function disconnect()
+    {
+        $user = Auth::user();
+        $user->update([
+            'microsoft_access_token' => null,
+            'microsoft_refresh_token' => null,
+            'microsoft_token_expiry' => null,
+            'microsoft_user_id' => null,
+        ]);
+        return redirect()->route('profile.edit')->with('status', 'Microsoft account losgekoppeld.');
+    }
 
+    private function saveMicrosoftTokens($user, \League\OAuth2\Client\Token\AccessToken $token)
+    {
+        $graph = new Graph();
+        $graph->setAccessToken($token->getToken());
+        // GECORRIGEERD: Een dollarteken '$' toegevoegd voor select
+        $graphUser = $graph->createRequest('GET', '/me?$select=id')->setReturnType(GraphUser::class)->execute();
 
+        $user->update([
+            'microsoft_access_token'  => $token->getToken(),
+            'microsoft_refresh_token' => $token->getRefreshToken() ?? $user->microsoft_refresh_token,
+            'microsoft_token_expiry'  => $token->getExpires(),
+            'microsoft_user_id'       => $graphUser->getId(),
+        ]);
+    }
+
+    private function refreshMicrosoftToken($user)
+    {
+        if (!$user->microsoft_refresh_token) return null;
+        try {
+            $newToken = $this->oauthClient->getAccessToken('refresh_token', [
+                'refresh_token' => $user->microsoft_refresh_token,
+            ]);
+            $this->saveMicrosoftTokens($user, $newToken);
+            return $newToken->getToken();
+        } catch (\Exception $e) {
+            Log::error('Microsoft token refresh failed: ' . $e->getMessage());
+            $user->update(['microsoft_access_token' => null, 'microsoft_refresh_token' => null, 'microsoft_token_expiry' => null, 'microsoft_user_id' => null]);
+            return null;
+        }
+    }
 }

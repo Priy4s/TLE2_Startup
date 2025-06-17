@@ -24,6 +24,10 @@ class User extends Authenticatable
         'google_access_token',
         'google_refresh_token',
         'google_id',
+
+        'microsoft_access_token',
+        'microsoft_refresh_token',
+        'microsoft_token_expiry',
     ];
 
     /**
