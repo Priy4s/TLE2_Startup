@@ -43,14 +43,6 @@
             </button>
             <p id="file-info" class="mt-2 text-sm text-gray-700"></p>
         </form>
-                    <form method="POST" action="{{ route('documents.upload') }}" enctype="multipart/form-data" class="mb-6 border-t border-gray-200 dark:border-gray-700 pt-6">
-                        @csrf
-                        <label class="block font-medium text-sm text-gray-700 dark:text-gray-300 mb-2" for="file">Upload New File</label>
-                        <div class="flex items-center">
-                            <input type="file" name="file" id="file" required class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 mr-4">
-                            <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">Upload</button>
-                        </div>
-                    </form>
 
                     @if(session('status'))
                         <div class="mb-4 text-green-600 font-semibold">{{ session('status') }}</div>
@@ -85,4 +77,5 @@
                 </div>
             </div>
         </div>
+    </div>
     </div>
