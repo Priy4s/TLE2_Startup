@@ -5,6 +5,7 @@
 /public/storage
 /storage/*.key
 /storage/pail
+/database/database.sqlite
 /vendor
 .env
 .env.backup
