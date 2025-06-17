@@ -31,6 +31,18 @@
                         </p>
                     @endif
 
+    <div class="p-4 max-w-3xl mx-auto">
+        <h1 class="text-2xl font-bold mb-2">Documents</h1>
+
+        <!-- Upload Form -->
+        <form method="POST" action="{{ route('documents.upload') }}" enctype="multipart/form-data" class="mb-6">
+            @csrf
+            <input type="file" name="file" id="file" required class="border rounded px-2 py-1 mr-2">
+            <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">
+                Upload File (Max 10 MB)
+            </button>
+            <p id="file-info" class="mt-2 text-sm text-gray-700"></p>
+        </form>
                     <form method="POST" action="{{ route('documents.upload') }}" enctype="multipart/form-data" class="mb-6 border-t border-gray-200 dark:border-gray-700 pt-6">
                         @csrf
                         <label class="block font-medium text-sm text-gray-700 dark:text-gray-300 mb-2" for="file">Upload New File</label>
