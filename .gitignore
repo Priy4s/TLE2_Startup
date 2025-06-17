@@ -5969,3 +5969,4 @@ yarn-error.log
 /frontend/eslint.config.js
 /frontend/postcss.config.js
 /frontend/tailwind.config.js
+database/database.sqlite
