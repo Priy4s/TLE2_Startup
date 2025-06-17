@@ -1,5 +1,4 @@
-
-        <!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -13,7 +12,7 @@
     <?php echo app('Illuminate\Foundation\Vite')(['resources/css/app.css', 'resources/js/app.js']); ?>
     <title>Tactiq</title>
 </head>
-<body class="bg-greenLight text-viridian flex min-h-screen">
+<body class="bg-greenLight text-viridian dark:bg-viridian dark:text-greenLight flex min-h-screen">
 <nav class="p-4 bg-accentBlue text-greenLight w-64 flex flex-col justify-between">
     <div>
     <!-- Logo -->
@@ -42,7 +41,7 @@
         <?php endif; ?>
     </div>
 </nav>
-<main class="min-h-full">
+<main class="min-h-full m-8">
     <?php echo e($slot); ?>
 
 </main>
