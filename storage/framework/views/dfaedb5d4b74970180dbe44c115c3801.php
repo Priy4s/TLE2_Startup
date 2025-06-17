@@ -14,8 +14,8 @@
     </button>
 
 <div class="container mx-auto mt-10">
-    <div class="wrapper bg-white rounded shadow w-full ">
-        <div class="header flex justify-between border-b p-2">
+    <div class="wrapper rounded shadow w-full ">
+        <div class="header flex justify-between border-b border-accentBlue p-2">
         <span class="text-lg font-bold">
           <?php echo e(now()->format('F Y')); ?>
 
@@ -40,31 +40,31 @@
         <table class="w-full">
             <thead>
             <tr>
-                <th class="p-2 border-r h-10 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 xl:text-sm text-xs">
+                <th class="p-2 border-r border-l border-accentBlue h-10 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 xl:text-sm text-xs">
                     <span class="xl:block lg:block md:block sm:block hidden">Sunday</span>
                     <span class="xl:hidden lg:hidden md:hidden sm:hidden block">Sun</span>
                 </th>
-                <th class="p-2 border-r h-10 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 xl:text-sm text-xs">
+                <th class="p-2 border-r border-accentBlue h-10 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 xl:text-sm text-xs">
                     <span class="xl:block lg:block md:block sm:block hidden">Monday</span>
                     <span class="xl:hidden lg:hidden md:hidden sm:hidden block">Mon</span>
                 </th>
-                <th class="p-2 border-r h-10 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 xl:text-sm text-xs">
+                <th class="p-2 border-r border-accentBlue h-10 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 xl:text-sm text-xs">
                     <span class="xl:block lg:block md:block sm:block hidden">Tuesday</span>
                     <span class="xl:hidden lg:hidden md:hidden sm:hidden block">Tue</span>
                 </th>
-                <th class="p-2 border-r h-10 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 xl:text-sm text-xs">
+                <th class="p-2 border-r border-accentBlue h-10 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 xl:text-sm text-xs">
                     <span class="xl:block lg:block md:block sm:block hidden">Wednesday</span>
                     <span class="xl:hidden lg:hidden md:hidden sm:hidden block">Wed</span>
                 </th>
-                <th class="p-2 border-r h-10 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 xl:text-sm text-xs">
+                <th class="p-2 border-r border-accentBlue h-10 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 xl:text-sm text-xs">
                     <span class="xl:block lg:block md:block sm:block hidden">Thursday</span>
                     <span class="xl:hidden lg:hidden md:hidden sm:hidden block">Thu</span>
                 </th>
-                <th class="p-2 border-r h-10 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 xl:text-sm text-xs">
+                <th class="p-2 border-r border-accentBlue h-10 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 xl:text-sm text-xs">
                     <span class="xl:block lg:block md:block sm:block hidden">Friday</span>
                     <span class="xl:hidden lg:hidden md:hidden sm:hidden block">Fri</span>
                 </th>
-                <th class="p-2 border-r h-10 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 xl:text-sm text-xs">
+                <th class="p-2 border-r border-accentBlue h-10 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 xl:text-sm text-xs">
                     <span class="xl:block lg:block md:block sm:block hidden">Saturday</span>
                     <span class="xl:hidden lg:hidden md:hidden sm:hidden block">Sat</span>
                 </th>
@@ -86,7 +86,7 @@
                                 : null;
                         ?>
 
-                        <td class="border p-1 h-40 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 overflow-auto transition cursor-pointer duration-500 ease hover:bg-gray-300">
+                        <td class="border border-accentBlue p-1 h-40 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 overflow-auto">
                             <?php if($currentDay > 0 && $currentDay <= $daysInMonth): ?>
                                 <div class="flex flex-col h-40 mx-auto xl:w-40 lg:w-30 md:w-30 sm:w-full w-10 mx-auto overflow-hidden">
                                     <div class="top h-5 w-full">
@@ -98,10 +98,18 @@
                                                 $eventDate = \Carbon\Carbon::parse($event->date);
                                             ?>
                                             <?php if($eventDate->toDateString() == $currentDate): ?>
-                                                <div class="event bg-accentBlue text-white rounded p-1 text-sm mb-1">
-                                                    <span class="event-name">
-                                                        <?php echo e($event->event); ?> <span class="event-time text-xs text-gray-200 ml-1"><?php echo e($eventDate->format('H:i')); ?></span>
-                                                    </span>
+                                                <div
+                                                        class="event bg-accentBlue text-white rounded p-1 text-sm mb-1 cursor-pointer"
+                                                        data-event="<?php echo e($event->event); ?>"
+                                                        data-date="<?php echo e($eventDate->format('Y-m-d H:i')); ?>"
+                                                        data-id="<?php echo e($event->id); ?>"
+                                                        onclick="showEventModal(this)"
+                                                >
+                                                        <span class="event-name">
+                                                            <?php echo e($event->event); ?>
+
+                                                            <span class="event-time text-xs text-gray-200 ml-1"><?php echo e($eventDate->format('H:i')); ?></span>
+                                                        </span>
                                                 </div>
                                             <?php endif; ?>
                                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
@@ -117,7 +125,7 @@
     </div>
 </div>
 
-    <!--START MODAL CODES-->
+
     <div id="modalOverlay2" class="fixed inset-0 bg-greenLight dark:bg-viridian dark:bg-opacity-50 bg-opacity-50 hidden z-40"></div>
     <div id="modal2" class="fixed inset-0 flex items-center justify-center hidden z-50">
         <div class="relative bg-articleBlue dark:bg-accentBlue p-6 rounded shadow-lg w-full max-w-md z-10">
@@ -133,7 +141,7 @@
                         name="event"
                         required
                         class="w-full px-4 py-2 border rounded border-gray-300 dark:border-gray-600 bg-greenLight text-viridian dark:bg-articleBlue dark:text-viridian focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
+                />
                 <label for="event_datetime" class="block mt-2 text-sm font-medium text-viridian dark:text-greenLight mb-2">Date & Time</label>
                 <input
                         type="datetime-local"
@@ -217,6 +225,42 @@
             closeBtn.addEventListener('click', closeModal2);
             overlay.addEventListener('click', closeModal2);
         });
+    </script>
+
+    <!-- Event details modal -->
+    <div id="eventModal" class="fixed inset-0 flex items-center justify-center hidden z-50">
+        <div class="relative bg-white dark:bg-accentBlue p-6 rounded shadow-lg w-full max-w-md z-10">
+            <button id="closeEventModal" class="absolute top-2 right-2 text-viridian hover:text-gray-800 text-xl">&times;</button>
+            <h1 class="text-xl font-bold" id="modalEventName"></h1>
+            <p class="mt-2 text-gray-700 dark:text-greenLight" id="modalEventDate"></p>
+            <div class="flex justify-end gap-2 mt-4">
+                <a id="editEventBtn" href="#" class="bg-yellow-500 text-white px-4 py-2 rounded">Edit</a>
+                <form id="deleteEventForm" method="POST" action="" onsubmit="return confirm('Delete this event?');">
+                    <?php echo csrf_field(); ?>
+                    <?php echo method_field('DELETE'); ?>
+                    <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded">Delete</button>
+                </form>
+            </div>
+        </div>
+        <div id="eventModalOverlay" class="fixed inset-0 bg-black bg-opacity-30"></div>
+    </div>
+
+    <script>
+        function showEventModal(el) {
+            document.getElementById('modalEventName').textContent = el.dataset.event;
+            document.getElementById('modalEventDate').textContent = el.dataset.date;
+            // Set Edit and Delete URLs
+            const eventId = el.dataset.id;
+            document.getElementById('editEventBtn').href = `/calendar/${eventId}/edit`;
+            document.getElementById('deleteEventForm').action = `/calendar/${eventId}`;
+            document.getElementById('eventModal').classList.remove('hidden');
+        }
+        document.getElementById('closeEventModal').onclick = function() {
+            document.getElementById('eventModal').classList.add('hidden');
+        };
+        document.getElementById('eventModalOverlay').onclick = function() {
+            document.getElementById('eventModal').classList.add('hidden');
+        };
     </script>
 
  <?php echo $__env->renderComponent(); ?>

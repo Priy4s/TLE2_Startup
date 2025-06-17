@@ -57,7 +57,8 @@ class CalendarController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $event = Calendar::findOrFail($id);
+        return view('calendar.edit', compact('event'));
     }
 
     /**
@@ -65,7 +66,18 @@ class CalendarController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $validated = $request->validate([
+            'event' => 'required|string|max:255',
+            'date' => 'required|date',
+        ]);
+
+        $event = Calendar::findOrFail($id);
+        $event->update([
+            'event' => $validated['event'],
+            'date' => \Carbon\Carbon::parse($validated['date'])->format('Y-m-d H:i:s'),
+        ]);
+
+        return redirect()->route('calendar.index')->with('success', 'Event updated!');
     }
 
     /**
@@ -73,6 +85,9 @@ class CalendarController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $event = Calendar::findOrFail($id);
+        $event->delete();
+
+        return redirect()->route('calendar.index')->with('success', 'Event deleted!');
     }
 }

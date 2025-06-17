@@ -25,6 +25,12 @@
             </div>
         </div>
     </div>
+    <form method="POST" action="<?php echo e(route('logout')); ?>">
+        <?php echo csrf_field(); ?>
+        <button type="submit" class="text-red-500 hover:text-red-700">
+            Logout
+        </button>
+    </form>
  <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginalff09156f73c896030ee75284e9b2c466)): ?>
