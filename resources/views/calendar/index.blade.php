@@ -1,5 +1,9 @@
 <x-nav>
 
+    <button id="openModal2" class="bg-accentBlue text-white px-4 py-2 rounded m-4">
+        Add Event
+    </button>
+
 <div class="container mx-auto mt-10">
     <div class="wrapper bg-white rounded shadow w-full ">
         <div class="header flex justify-between border-b p-2">
@@ -81,7 +85,7 @@
                                     <div class="bottom flex-grow h-30 py-1 w-full cursor-pointer">
                                         @foreach ($events as $event)
                                             @php
-                                                $eventDate = \Carbon\Carbon::createFromTimestamp($event->date / 1000);
+                                                $eventDate = \Carbon\Carbon::parse($event->date);
                                             @endphp
                                             @if ($eventDate->toDateString() == $currentDate)
                                                 <div class="event bg-accentBlue text-white rounded p-1 text-sm mb-1">
@@ -120,6 +124,14 @@
                         required
                         class="w-full px-4 py-2 border rounded border-gray-300 dark:border-gray-600 bg-greenLight text-viridian dark:bg-articleBlue dark:text-viridian focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
+                <label for="event_datetime" class="block mt-2 text-sm font-medium text-viridian dark:text-greenLight mb-2">Date & Time</label>
+                <input
+                        type="datetime-local"
+                        id="date"
+                        name="date"
+                        required
+                        class="w-full px-4 py-2 border rounded border-gray-300 dark:border-gray-600 bg-greenLight text-viridian dark:bg-articleBlue dark:text-viridian focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
                 <x-primary-button type="submit" class="mt-4 px-4 py-2">
                     Submit
                 </x-primary-button>

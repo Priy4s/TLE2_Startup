@@ -29,17 +29,19 @@ class CalendarController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'event' => 'required|string|max:255',
             'date' => 'required|date',
         ]);
 
+        $datetime = \Carbon\Carbon::parse($validated['date'])->format('Y-m-d H:i:s');
+
         Calendar::create([
-            'event' => $request->event,
-            'date' => $request->date,
+            'event' => $validated['event'],
+            'date' => $datetime,
         ]);
 
-        return redirect()->back();
+        return redirect()->route('calendar.index')->with('success', 'Event created!');
     }
 
     /**
