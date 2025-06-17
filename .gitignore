@@ -6,6 +6,8 @@
 /storage/*.key
 /storage/pail
 /vendor
+/database/database.sqlite
+C:/Users/Senna/CMGT Jaar 2/TLE2_Startup/database/database.sqlite
 .env
 .env.backup
 .env.production
@@ -5969,4 +5971,4 @@ yarn-error.log
 /frontend/eslint.config.js
 /frontend/postcss.config.js
 /frontend/tailwind.config.js
-database/database.sqlite
+
