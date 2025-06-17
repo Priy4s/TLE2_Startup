@@ -80,14 +80,10 @@
                                     </div>
                                     <div class="bottom flex-grow h-30 py-1 w-full cursor-pointer">
                                         @foreach ($events as $event)
-                                            {{ dump($event->date) }}
                                             @php
-                                                $eventDate = \Carbon\Carbon::createFromTimestamp($event->date);
+                                                $eventDate = \Carbon\Carbon::createFromTimestamp($event->date / 1000);
                                             @endphp
-                                            {{ dump($eventDate) }}
-                                            {{ dump($currentDate) }}
-
-                                            @if ($eventDate == $currentDate)
+                                            @if ($eventDate->toDateString() == $currentDate)
                                                 <div class="event bg-purple-400 text-white rounded p-1 text-sm mb-1">
                                                     <span class="event-name">{{ $event->event }}</span>
                                                 </div>

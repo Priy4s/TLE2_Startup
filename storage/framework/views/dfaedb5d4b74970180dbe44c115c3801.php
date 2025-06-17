@@ -90,17 +90,10 @@
                                     </div>
                                     <div class="bottom flex-grow h-30 py-1 w-full cursor-pointer">
                                         <?php $__currentLoopData = $events; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $event): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                            <?php echo e(dump($event->date)); ?>
-
                                             <?php
-                                                $eventDate = \Carbon\Carbon::createFromTimestamp($event->date);
+                                                $eventDate = \Carbon\Carbon::createFromTimestamp($event->date / 1000);
                                             ?>
-                                            <?php echo e(dump($eventDate)); ?>
-
-                                            <?php echo e(dump($currentDate)); ?>
-
-
-                                            <?php if($eventDate == $currentDate): ?>
+                                            <?php if($eventDate->toDateString() == $currentDate): ?>
                                                 <div class="event bg-purple-400 text-white rounded p-1 text-sm mb-1">
                                                     <span class="event-name"><?php echo e($event->event); ?></span>
                                                 </div>
