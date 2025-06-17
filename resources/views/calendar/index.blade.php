@@ -103,4 +103,80 @@
     </div>
 </div>
 
+    <!--START MODAL CODES-->
+    <div id="modalOverlay2" class="fixed inset-0 bg-greenLight dark:bg-viridian dark:bg-opacity-50 bg-opacity-50 hidden z-40"></div>
+    <div id="modal2" class="fixed inset-0 flex items-center justify-center hidden z-50">
+        <div class="relative bg-articleBlue dark:bg-accentBlue p-6 rounded shadow-lg w-full max-w-md z-10">
+            <button id="closeModal2" class="absolute top-2 right-2 text-viridian hover:text-gray-800 text-xl">&times;</button>
+
+            <form method="POST" action="{{ route('calendar.store') }}">
+                @csrf
+                <h1 class="text-xl font-bold">New Event</h1>
+                <label for="name" class="block mt-2 text-sm font-medium text-viridian dark:text-greenLight mb-2">Name</label>
+                <input
+                        type="text"
+                        id="event"
+                        name="event"
+                        required
+                        class="w-full px-4 py-2 border rounded border-gray-300 dark:border-gray-600 bg-greenLight text-viridian dark:bg-articleBlue dark:text-viridian focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                <x-primary-button type="submit" class="mt-4 px-4 py-2">
+                    Submit
+                </x-primary-button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.addEventListener('click', function (e) {
+                document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                    if (!menu.contains(e.target) && !menu.previousElementSibling.contains(e.target)) {
+                        menu.classList.add('hidden');
+                    }
+                });
+            });
+
+            document.querySelectorAll('.menu-toggle').forEach(button => {
+                button.addEventListener('click', function (e) {
+                    e.stopPropagation(); // prevent body click from closing it
+                    const menuId = this.getAttribute('data-id');
+                    const menu = document.getElementById(menuId);
+                    // Hide all other menus
+                    document.querySelectorAll('.dropdown-menu').forEach(m => {
+                        if (m !== menu) m.classList.add('hidden');
+                    });
+                    // Toggle current
+                    menu.classList.toggle('hidden');
+                });
+            });
+        });
+        function openModal(id) {
+            document.getElementById(`modal-${id}`).classList.remove('hidden');
+        }
+        function closeModal(id) {
+            document.getElementById(`modal-${id}`).classList.add('hidden');
+        }
+        document.addEventListener('DOMContentLoaded', function () {
+            const modal = document.getElementById('modal2');
+            const overlay = document.getElementById('modalOverlay2');
+            const openBtn = document.getElementById('openModal2');
+            const closeBtn = document.getElementById('closeModal2');
+
+            function openModal2() {
+                modal.classList.remove('hidden');
+                overlay.classList.remove('hidden');
+            }
+
+            function closeModal2() {
+                modal.classList.add('hidden');
+                overlay.classList.add('hidden');
+            }
+
+            openBtn.addEventListener('click', openModal2);
+            closeBtn.addEventListener('click', closeModal2);
+            overlay.addEventListener('click', closeModal2);
+        });
+    </script>
+
 </x-nav>
