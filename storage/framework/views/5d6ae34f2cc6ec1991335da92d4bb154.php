@@ -40,7 +40,7 @@
                         <div id="modal-<?php echo e($workspace->id); ?>" class="fixed inset-0 flex items-center justify-center hidden z-50">
                             <div class="absolute inset-0 bg-greenLight dark:bg-viridian bg-opacity-50 dark:bg-opacity-50" onclick="closeModal('<?php echo e($workspace->id); ?>')"></div>
                             <div class="relative bg-articleBlue dark:bg-accentBlue p-6 rounded shadow-lg w-full max-w-md z-10">
-                                <button class="absolute top-2 right-2 text-accentBlue hover:text-accentGreen text-xl" onclick="closeModal('<?php echo e($workspace->id); ?>')">&times;</button>
+                                <button class="absolute top-2 right-2 text-viridian hover:text-accentGreen text-xl" onclick="closeModal('<?php echo e($workspace->id); ?>')">&times;</button>
                                 <h1 class="text-xl font-bold">Edit Workspace Name</h1>
                                 <form method="POST" action="<?php echo e(route('workspaces.update', $workspace)); ?>">
                                     <?php echo csrf_field(); ?>
