@@ -94,8 +94,10 @@
                                                 $eventDate = \Carbon\Carbon::createFromTimestamp($event->date / 1000);
                                             ?>
                                             <?php if($eventDate->toDateString() == $currentDate): ?>
-                                                <div class="event bg-purple-400 text-white rounded p-1 text-sm mb-1">
-                                                    <span class="event-name"><?php echo e($event->event); ?></span>
+                                                <div class="event bg-accentBlue text-white rounded p-1 text-sm mb-1">
+                                                    <span class="event-name">
+                                                        <?php echo e($event->event); ?> <span class="event-time text-xs text-gray-200 ml-1"><?php echo e($eventDate->format('H:i')); ?></span>
+                                                    </span>
                                                 </div>
                                             <?php endif; ?>
                                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>

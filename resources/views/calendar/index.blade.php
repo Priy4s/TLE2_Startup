@@ -84,8 +84,10 @@
                                                 $eventDate = \Carbon\Carbon::createFromTimestamp($event->date / 1000);
                                             @endphp
                                             @if ($eventDate->toDateString() == $currentDate)
-                                                <div class="event bg-purple-400 text-white rounded p-1 text-sm mb-1">
-                                                    <span class="event-name">{{ $event->event }}</span>
+                                                <div class="event bg-accentBlue text-white rounded p-1 text-sm mb-1">
+                                                    <span class="event-name">
+                                                        {{ $event->event }} <span class="event-time text-xs text-gray-200 ml-1">{{ $eventDate->format('H:i') }}</span>
+                                                    </span>
                                                 </div>
                                             @endif
                                         @endforeach

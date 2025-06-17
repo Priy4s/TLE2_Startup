@@ -10,7 +10,7 @@ class CalendarController extends Controller
 {
     public function index()
     {
-        $events = Calendar::all();
+        $events = Calendar::orderBy('date')->get();
         $currentMonth = Carbon::now()->format('F Y');
 
         return view('calendar.index', compact('events', 'currentMonth'));
