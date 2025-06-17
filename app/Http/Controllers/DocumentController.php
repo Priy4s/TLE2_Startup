@@ -4,107 +4,165 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use App\Models\CloudFile;
+
+// Importeer de benodigde classes voor BEIDE services
 use Google\Client as GoogleClient;
 use Google\Service\Drive as GoogleDrive;
+use League\OAuth2\Client\Provider\GenericProvider as MicrosoftClient;
+use Microsoft\Graph\Graph;
+use Microsoft\Graph\Model\DriveItem;
 
 class DocumentController extends Controller
 {
+    /**
+     * Toont een gecombineerd overzicht van alle cloud- en lokale bestanden.
+     */
     public function overview(Request $request)
     {
         $user = Auth::user();
 
+        if ($request->has('sync_all')) {
+            $this->syncGoogleFiles($user);      // Synchroniseer eerst Google
+            $this->syncMicrosoftFiles($user);   // Synchroniseer daarna Microsoft
+            return redirect()->route('documents.overview')->with('status', 'All accounts are being synced.');
+        }
+
+        // --- Database Query ---
         $query = CloudFile::where('user_id', $user->id);
 
         // Search filter
         if ($request->filled('search')) {
-            $search = $request->input('search');
-            $query->where('name', 'like', "%{$search}%");
+            $query->where('name', 'like', "%{$request->search}%");
         }
 
-        // Provider filter (optional)
-        if ($request->filled('provider') && in_array($request->provider, ['local', 'google'])) {
+        // TOEGEVOEGD: Provider filter uitgebreid met 'microsoft'
+        if ($request->filled('provider') && in_array($request->provider, ['local', 'google', 'microsoft'])) {
             $query->where('provider', $request->provider);
         }
 
-        // Sync Google files if requested
-        if ($request->has('sync_google')) {
-            $this->syncGoogleFiles($user);
-            return redirect()->route('documents.overview');
-        }
-
-
-        $files = $query->orderBy('synced_at', 'desc')->get();
-
-        $lastSyncedAt = CloudFile::where('user_id', $user->id)
-            ->whereNotNull('synced_at')
-            ->orderBy('synced_at', 'desc')
-            ->value('synced_at');
+        $files = $query->orderBy('name', 'asc')->get();
+        $lastSyncedAt = CloudFile::where('user_id', $user->id)->whereNotNull('synced_at')->max('synced_at');
 
         return view('alldocuments.documents-overview', compact('files', 'lastSyncedAt'));
     }
 
+    /**
+     * Verwerkt het uploaden van lokale bestanden.
+     */
     public function upload(Request $request)
     {
-        $request->validate([
-            'file' => 'required|file|max:10240',
-        ]);
+        $request->validate(['file' => 'required|file|max:10240']);
 
         $user = Auth::user();
         $file = $request->file('file');
-        $filename = $file->getClientOriginalName();
-        $mime = $file->getClientMimeType();
-
         $path = $file->store("uploads/{$user->id}", 'public');
-        $url = Storage::url($path);
 
         CloudFile::create([
-            'user_id' => $user->id,
-            'file_id' => 'local-' . uniqid(),
-            'name' => $filename,
-            'mime_type' => $mime,
-            'web_view_link' => $url,
-            'provider' => 'local',
-            'synced_at' => null,
+            'user_id'       => $user->id,
+            'file_id'       => 'local-' . uniqid(),
+            'name'          => $file->getClientOriginalName(),
+            'mime_type'     => $file->getClientMimeType(),
+            'web_view_link' => Storage::url($path),
+            'provider'      => 'local',
+            'synced_at'     => now(),
         ]);
 
         return redirect()->route('documents.overview')->with('status', 'File uploaded successfully!');
     }
 
+    /**
+     * Synchroniseert bestanden van Google Drive.
+     */
     private function syncGoogleFiles($user)
     {
-        if (!$user->google_access_token) {
+        if (!$user->google_refresh_token) {
             return;
         }
 
-        $client = new GoogleClient();
-        $client->setAccessToken($user->google_access_token);
+        try {
+            $client = new GoogleClient();
+            $client->setClientId(config('services.google.client_id'));
+            $client->setClientSecret(config('services.google.client_secret'));
+            $client->setRedirectUri(config('services.google.redirect'));
+            $client->setAccessToken($user->google_access_token);
 
-        if ($client->isAccessTokenExpired() && $user->google_refresh_token) {
-            $client->fetchAccessTokenWithRefreshToken($user->google_refresh_token);
-            $user->google_access_token = $client->getAccessToken()['access_token'] ?? $user->google_access_token;
-            $user->save();
+            if ($client->isAccessTokenExpired()) {
+                $tokenData = $client->fetchAccessTokenWithRefreshToken($user->google_refresh_token);
+                $user->update(['google_access_token' => $tokenData['access_token']]);
+            }
+
+            $service = new GoogleDrive($client);
+            $response = $service->files->listFiles(['fields' => 'files(id, name, mimeType, webViewLink)', 'q' => "'me' in owners"]);
+
+            foreach ($response->getFiles() as $file) {
+                CloudFile::updateOrCreate(
+                    ['user_id' => $user->id, 'file_id' => $file->id, 'provider' => 'google'],
+                    ['name' => $file->name, 'mime_type' => $file->mimeType, 'web_view_link' => $file->webViewLink, 'synced_at' => now()]
+                );
+            }
+        } catch (\Exception $e) {
+            Log::error('Google Sync Failed', ['message' => $e->getMessage()]);
+        }
+    }
+
+    /**
+     * NIEUW TOEGEVOEGD: Synchroniseert bestanden van Microsoft OneDrive.
+     */
+    private function syncMicrosoftFiles($user)
+    {
+        if (!$user->microsoft_refresh_token) {
+            return;
         }
 
-        $service = new GoogleDrive($client);
+        try {
+            $accessToken = $user->microsoft_access_token;
 
-        $response = $service->files->listFiles([
-            'fields' => 'files(id, name, mimeType, webViewLink)',
-            'q' => "'me' in owners",
-            'supportsAllDrives' => true,
+            // Controleer of de token is verlopen en vernieuw indien nodig
+            if (time() >= ($user->microsoft_token_expiry ?? 0) - 60) {
+                $oauthClient = $this->getMicrosoftClient();
+                $newToken = $oauthClient->getAccessToken('refresh_token', ['refresh_token' => $user->microsoft_refresh_token]);
+
+                $user->update([
+                    'microsoft_access_token' => $newToken->getToken(),
+                    'microsoft_token_expiry' => $newToken->getExpires(),
+                    'microsoft_refresh_token' => $newToken->getRefreshToken() ?? $user->microsoft_refresh_token,
+                ]);
+                $user->refresh(); // Herlaad het user model met de nieuwe data
+                $accessToken = $newToken->getToken();
+            }
+
+            $graph = new Graph();
+            $graph->setAccessToken($accessToken);
+            $driveItems = $graph->createRequest('GET', '/me/drive/root/children?$top=200')->setReturnType(DriveItem::class)->execute();
+
+            foreach ($driveItems as $item) {
+                CloudFile::updateOrCreate(
+                    ['user_id' => $user->id, 'file_id' => $item->getId(), 'provider' => 'microsoft'],
+                    ['name' => $item->getName(), 'mime_type' => $item->getFile() ? $item->getFile()->getMimeType() : 'folder/microsoft', 'web_view_link' => $item->getWebUrl(), 'synced_at' => now()]
+                );
+            }
+        } catch (\Exception $e) {
+            Log::error('Microsoft Sync Failed', ['message' => $e->getMessage()]);
+            // Optioneel: Stuur een foutmelding terug naar de gebruiker
+            return redirect()->route('documents.overview')->with('error', 'Microsoft sync is mislukt: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * NIEUW TOEGEVOEGD: Helper-methode om de Microsoft client aan te maken.
+     */
+    private function getMicrosoftClient()
+    {
+        return new MicrosoftClient([
+            'clientId'                => config('services.microsoft.client_id'),
+            'clientSecret'            => config('services.microsoft.client_secret'),
+            'redirectUri'             => config('services.microsoft.redirect'),
+            'urlAuthorize'            => 'https://login.microsoftonline.com/' . config('services.microsoft.tenant', 'common') . '/oauth2/v2.0/authorize',
+            'urlAccessToken'          => 'https://login.microsoftonline.com/' . config('services.microsoft.tenant', 'common') . '/oauth2/v2.0/token',
+            'urlResourceOwnerDetails' => '',
         ]);
-
-        foreach ($response->getFiles() as $file) {
-            CloudFile::updateOrCreate(
-                ['user_id' => $user->id, 'file_id' => $file->id, 'provider' => 'google'],
-                [
-                    'name' => $file->name,
-                    'mime_type' => $file->mimeType,
-                    'web_view_link' => $file->webViewLink,
-                    'synced_at' => now(),
-                ]
-            );
-        }
     }
 }
