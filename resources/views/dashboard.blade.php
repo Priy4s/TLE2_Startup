@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-nav>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
             {{ __('Dashboard') }}
@@ -14,4 +14,10 @@
             </div>
         </div>
     </div>
-</x-app-layout>
+    <form method="POST" action="{{ route('logout') }}">
+        @csrf
+        <button type="submit" class="text-red-500 hover:text-red-700">
+            Logout
+        </button>
+    </form>
+</x-nav>
