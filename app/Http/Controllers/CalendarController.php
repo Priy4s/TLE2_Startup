@@ -8,12 +8,18 @@ use Illuminate\Support\Carbon;
 
 class CalendarController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $events = Calendar::orderBy('date')->get();
-        $currentMonth = Carbon::now()->format('F Y');
 
-        return view('calendar.index', compact('events', 'currentMonth'));
+        $month = $request->query('month', now()->month);
+        $year = $request->query('year', now()->year);
+
+        return view('calendar.index', [
+            'events' => $events,
+            'currentMonth' => $month,
+            'currentYear' => $year,
+        ]);
     }
 
     /**
