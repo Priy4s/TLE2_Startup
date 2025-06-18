@@ -249,7 +249,6 @@
         function showEventModal(el) {
             document.getElementById('modalEventName').textContent = el.dataset.event;
             document.getElementById('modalEventDate').textContent = el.dataset.date;
-            // Set Edit and Delete URLs
             const eventId = el.dataset.id;
             document.getElementById('editEventBtn').href = `/calendar/${eventId}/edit`;
             document.getElementById('deleteEventForm').action = `/calendar/${eventId}`;
