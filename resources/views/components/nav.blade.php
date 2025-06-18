@@ -23,7 +23,7 @@
             <a href="" class="font-medium text-3xl">Dashboard</a>
         </li>
         <li class="inline my-4">
-            <a href="{{ route('documents.overview') }}" class="font-medium text-3xl">Documents</a>
+            <a href="" class="font-medium text-3xl">Documents</a>
         </li>
         <li class="inline my-4">
             <a href="{{ route('workspaces.index') }}" class="font-medium text-3xl">Workspaces</a>
@@ -35,9 +35,9 @@
     </div>
     <div>
         @auth
-            <a href="{{ route('profile.edit') }}" class="font-medium text-3xl">Profile</a>
+            <p>Profile</p>
         @else
-            <a href="{{ route('login') }}" class="font-medium text-3xl">Login</a>
+            <p>Login</p>
         @endauth
     </div>
 </nav>
