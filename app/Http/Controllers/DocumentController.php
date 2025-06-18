@@ -31,7 +31,10 @@ class DocumentController extends Controller
             return redirect()->route('documents.overview')->with('status', 'All accounts are being synced.');
         }
 
-        $query = CloudFile::where('user_id', $user->id);
+        $query = CloudFile::where('user_id', $user->id)
+                ->where('mime_type', '!=', 'folder/microsoft')
+                ->where('mime_type', '!=', 'application/vnd.google-apps.folder');
+
 
         if ($request->filled('search')) {
             $query->where('name', 'like', "%{$request->search}%");
