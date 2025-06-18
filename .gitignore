@@ -21,6 +21,6 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
-/database/seeders/
+/database/database.sqlite
 /storage/framework/views/
 database/database.sqlite
