@@ -199,4 +199,4 @@
         </div>
     </form>
 </section>
-<?php /**PATH C:\CMGT\Jaar_2\TLE2_Startup\resources\views/profile/partials/update-profile-information-form.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\Users\Senna\CMGT Jaar 2\TLE2_Startup\resources\views/profile/partials/update-profile-information-form.blade.php ENDPATH**/ ?>

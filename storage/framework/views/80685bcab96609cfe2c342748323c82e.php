@@ -110,4 +110,4 @@ $maxWidth = [
 
     </div>
 </div>
-<?php /**PATH C:\CMGT\Jaar_2\TLE2_Startup\resources\views/components/modal.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\Users\Senna\CMGT Jaar 2\TLE2_Startup\resources\views/components/modal.blade.php ENDPATH**/ ?>
