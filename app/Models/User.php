@@ -52,6 +52,12 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function items()
+    {
+        return $this->belongsToMany(Item::class);
+    }
+
     protected static function booted()
     {
         static::deleting(function ($user) {
