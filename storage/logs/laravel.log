@@ -1,0 +1,9 @@
+[2025-06-19 10:02:28] local.ERROR: Command "libk" is not defined. {"exception":"[object] (Symfony\\Component\\Console\\Exception\\CommandNotFoundException(code: 0): Command \"libk\" is not defined. at C:\\Users\\priya\\Documents\\tle2_deel2\\vendor\\symfony\\console\\Application.php:725)
+[stacktrace]
+#0 C:\\Users\\priya\\Documents\\tle2_deel2\\vendor\\symfony\\console\\Application.php(283): Symfony\\Component\\Console\\Application->find('libk')
+#1 C:\\Users\\priya\\Documents\\tle2_deel2\\vendor\\symfony\\console\\Application.php(192): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#2 C:\\Users\\priya\\Documents\\tle2_deel2\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(198): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#3 C:\\Users\\priya\\Documents\\tle2_deel2\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(1235): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#4 C:\\Users\\priya\\Documents\\tle2_deel2\\artisan(13): Illuminate\\Foundation\\Application->handleCommand(Object(Symfony\\Component\\Console\\Input\\ArgvInput))
+#5 {main}
+"} 
