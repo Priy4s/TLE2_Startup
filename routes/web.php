@@ -7,6 +7,7 @@ use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\DocumentController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\KikkermanController;
+use App\Http\Controllers\CalendarController;
 
 use App\Http\Controllers\MicrosoftController;
 
