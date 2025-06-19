@@ -21,6 +21,13 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'google_access_token',
+        'google_refresh_token',
+        'google_id',
+
+        'microsoft_access_token',
+        'microsoft_refresh_token',
+        'microsoft_token_expiry',
     ];
 
     /**
@@ -45,4 +52,17 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function items()
+    {
+        return $this->belongsToMany(Item::class);
+    }
+
+    protected static function booted()
+    {
+        static::deleting(function ($user) {
+            CloudFile::where('user_id', $user->id)->delete();
+        });
+    }
+
 }
