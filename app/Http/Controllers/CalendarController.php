@@ -97,3 +97,5 @@ class CalendarController extends Controller
         return redirect()->route('calendar.index')->with('success', 'Event deleted!');
     }
 }
+
+//test

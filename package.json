@@ -17,6 +17,7 @@
         "vite": "^5.0"
     },
     "dependencies": {
+        "@react-oauth/google": "^0.12.2",
         "@tailwindcss/vite": "^4.1.8"
     }
 }
