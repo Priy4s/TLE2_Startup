@@ -14,6 +14,16 @@ class ProfileController extends Controller
     /**
      * Display the user's profile form.
      */
+    public function showProfile(Request $request)
+    {
+        $user = $request->user();
+        $googleConnected = !empty($user->google_refresh_token);
+
+        return view('profilePage', [
+            'user' => $user,
+            'googleConnected' => $googleConnected,
+        ]);
+    }
     public function edit(Request $request): View
     {
         return view('profile.edit', [
