@@ -44,7 +44,7 @@ Route::get('/kikkerman', [KikkermanController::class, 'index'])
     ->name('kikkerman.index');
 
 //Route::resource('workspaces', WorkspaceController::class)->middleware('auth');
-
+Route::resource('calendar', CalendarController::class);
 
 Route::get('/dashboard', function () {
     return view('dashboard');
