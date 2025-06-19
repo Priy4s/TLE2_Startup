@@ -15,7 +15,7 @@
                     @php
                         $filterOptions = ['google', 'microsoft', 'word', 'powerpoint', 'pdf', 'local'];
                         $baseClass = 'px-3 py-1 text-sm font-medium rounded-full cursor-pointer transition';
-                        $activeClass = 'bg-blue-600 text-white';
+                        $activeClass = 'bg-articleBlue hover:bg-accentGreen text-viridian hover:text-greenLight dark:bg-accentBlue dark:hover:bg-accentGreen dark:text-greenLight text-white';
                         $inactiveClass = 'bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600';
                     @endphp
 
