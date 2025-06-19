@@ -17,6 +17,7 @@ use Microsoft\Graph\Model\DriveItem;
 
 class DocumentController extends Controller
 {
+
     /**
      * Toont een gecombineerd overzicht van alle cloud- en lokale bestanden.
      */
@@ -25,33 +26,57 @@ class DocumentController extends Controller
         $user = Auth::user();
 
         if ($request->has('sync_all')) {
-            $this->syncGoogleFiles($user);      // Synchroniseer eerst Google
-            $this->syncMicrosoftFiles($user);   // Synchroniseer daarna Microsoft
+            $this->syncGoogleFiles($user);
+            $this->syncMicrosoftFiles($user);
             return redirect()->route('documents.overview')->with('status', 'All accounts are being synced.');
         }
 
-        // --- Database Query ---
-        $query = CloudFile::where('user_id', $user->id);
+        $query = CloudFile::where('user_id', $user->id)
+                ->where('mime_type', '!=', 'folder/microsoft')
+                ->where('mime_type', '!=', 'application/vnd.google-apps.folder');
 
-        // Search filter
+
         if ($request->filled('search')) {
             $query->where('name', 'like', "%{$request->search}%");
         }
 
-        // TOEGEVOEGD: Provider filter uitgebreid met 'microsoft'
-        if ($request->filled('provider') && in_array($request->provider, ['local', 'google', 'microsoft'])) {
-            $query->where('provider', $request->provider);
+        $activeFilters = $request->input('filters', []);
+
+        if (!empty($activeFilters)) {
+
+            $query->where(function ($q) use ($activeFilters) {
+                foreach ($activeFilters as $filter) {
+                    switch ($filter) {
+                        case 'google':
+                        case 'microsoft':
+                        case 'local':
+                            $q->orWhere('provider', $filter);
+                            break;
+                        case 'word':
+                            $q->orWhereIn('mime_type', ['application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']);
+                            break;
+                        case 'powerpoint':
+                            $q->orWhereIn('mime_type', ['application/vnd.ms-powerpoint', 'application/vnd.openxmlformats-officedocument.presentationml.presentation']);
+                            break;
+                        case 'pdf':
+                            $q->orWhere('mime_type', 'application/pdf');
+                            break;
+                    }
+                }
+            });
         }
 
         $files = $query->orderBy('name', 'asc')->get();
         $lastSyncedAt = CloudFile::where('user_id', $user->id)->whereNotNull('synced_at')->max('synced_at');
 
-        return view('alldocuments.documents-overview', compact('files', 'lastSyncedAt'));
+        return view('alldocuments.documents-overview', [
+            'files' => $files,
+            'lastSyncedAt' => $lastSyncedAt,
+            'activeFilters' => $activeFilters,
+            'currentSearch' => $request->search
+        ]);
     }
 
-    /**
-     * Verwerkt het uploaden van lokale bestanden.
-     */
     public function upload(Request $request)
     {
         $request->validate(['file' => 'required|file|max:10240']);
