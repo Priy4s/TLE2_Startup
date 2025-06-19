@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\WorkspaceController;
 use App\Http\Controllers\LootboxController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\KikkermanController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -12,6 +13,10 @@ Route::get('/', function () {
 Route::get('/lootbox', function () {
     return view('lootbox');
 });
+
+Route::get('/kikkerman', [KikkermanController::class, 'index'])
+    ->middleware('auth') // Zorg dat alleen ingelogde gebruikers erbij kunnen
+    ->name('kikkerman.index');
 
 //Route::resource('workspaces', WorkspaceController::class)->middleware('auth');
 

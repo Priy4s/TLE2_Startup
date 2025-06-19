@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('items', function (Blueprint $table) {
-            //
+            $table->string('category')->after('name'); // bv: 'upper', 'lower', 'color'
+            $table->string('image_path')->after('category'); // bv: 'hat1.png', 'blue-overlay.png'
         });
     }
 
