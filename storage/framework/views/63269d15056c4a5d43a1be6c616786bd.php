@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <?php echo app('Illuminate\Foundation\Vite')(['resources/css/app.css', 'resources/js/app.js']); ?>
     <title>Tactiq</title>
 </head>
@@ -23,7 +24,7 @@
             <a href="" class="font-medium text-3xl">Dashboard</a>
         </li>
         <li class="inline my-4">
-            <a href="" class="font-medium text-3xl">Documents</a>
+            <a href="<?php echo e(route('documents.overview')); ?>" class="font-medium text-3xl">Documents</a>
         </li>
         <li class="inline my-4">
             <a href="<?php echo e(route('workspaces.index')); ?>" class="font-medium text-3xl">Workspaces</a>
@@ -35,9 +36,9 @@
     </div>
     <div>
         <?php if(auth()->guard()->check()): ?>
-            <p>Profile</p>
+            <a href="<?php echo e(route('profile.edit')); ?>" class="font-medium text-3xl">Profile</a>
         <?php else: ?>
-            <p>Login</p>
+            <a href="<?php echo e(route('login')); ?>" class="font-medium text-3xl">Login</a>
         <?php endif; ?>
     </div>
 </nav>

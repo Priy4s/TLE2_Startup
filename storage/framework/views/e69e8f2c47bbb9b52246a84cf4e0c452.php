@@ -2,4 +2,4 @@
     <?php echo e($slot); ?>
 
 </button>
-<?php /**PATH C:\CMGT\Jaar_2\TLE2_Startup\resources\views/components/secondary-button.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\Users\Senna\CMGT Jaar 2\TLE2_Startup\resources\views/components/secondary-button.blade.php ENDPATH**/ ?>

@@ -179,4 +179,4 @@
 <?php unset($__componentOriginal9f64f32e90b9102968f2bc548315018c); ?>
 <?php endif; ?>
 </section>
-<?php /**PATH C:\CMGT\Jaar_2\TLE2_Startup\resources\views/profile/partials/delete-user-form.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\Users\Senna\CMGT Jaar 2\TLE2_Startup\resources\views/profile/partials/delete-user-form.blade.php ENDPATH**/ ?>
