@@ -24,21 +24,21 @@
             <a href="" class="font-medium text-3xl">Dashboard</a>
         </li>
         <li class="inline my-4">
-            <a href="<?php echo e(route('documents.overview')); ?>" class="font-medium text-3xl">Documents</a>
+            <a href="" class="font-medium text-3xl">Documents</a>
         </li>
         <li class="inline my-4">
             <a href="<?php echo e(route('workspaces.index')); ?>" class="font-medium text-3xl">Workspaces</a>
         </li>
         <li class="inline my-4">
-            <a href="" class="font-medium text-3xl">Calendar</a>
+            <a href="<?php echo e(route('calendar.index')); ?>" class="font-medium text-3xl">Calendar</a>
         </li>
     </ul>
     </div>
     <div>
         <?php if(auth()->guard()->check()): ?>
-            <a href="<?php echo e(route('profile.edit')); ?>" class="font-medium text-3xl">Profile</a>
+            <p>Profile</p>
         <?php else: ?>
-            <a href="<?php echo e(route('login')); ?>" class="font-medium text-3xl">Login</a>
+            <p>Login</p>
         <?php endif; ?>
     </div>
 </nav>
@@ -48,4 +48,4 @@
 </main>
 </body>
 </html>
-<?php /**PATH C:\Users\Senna\CMGT Jaar 2\TLE2_Startup\resources\views/components/nav.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\CMGT\Jaar_2\TLE2_Startup\resources\views/components/nav.blade.php ENDPATH**/ ?>
