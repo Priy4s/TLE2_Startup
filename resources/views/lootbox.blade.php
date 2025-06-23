@@ -75,7 +75,7 @@
     </style>
 </head>
 <body>
-
+<p><a href="{{ route('kikkerman.index') }}" class="font-medium text-3xl">Back to your kikkerman!</a></p>
 <p>You can claim your next lootbox in:</p>
 <p id="timer"></p>
 <button id="claimBtn" style="display: none; background-color: #2b6561; color: white">Claim Lootbox</button>

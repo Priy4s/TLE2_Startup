@@ -68,6 +68,8 @@
             <span id="color-name" class="item-name">None</span>
             <div class="arrow-btn" data-category="color" data-direction="1">></div>
         </div>
+        <p><a href="{{ route('lootbox.index') }}" class="font-medium text-3xl">Open your daily lootbox!</a></p>
+        <p><a href="{{ route('dashboard') }}" class="font-medium text-3xl">Take me back home</a></p>
     </div>
 </div>
 
