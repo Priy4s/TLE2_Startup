@@ -9,7 +9,8 @@ use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\KikkermanController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\MicrosoftController;
-use App\Http\Controllers\NoteController; // <-- Added
+use App\Http\Controllers\NoteController;
+use App\Http\Controllers\LinkController; // <-- NEW
 
 // Microsoft routes
 Route::get('/microsoft/login', [MicrosoftController::class, 'redirectToProvider'])->name('microsoft.login');
@@ -54,6 +55,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Notes - Add/Delete Notes for Workspaces
     Route::post('/notes', [NoteController::class, 'store'])->name('notes.store');
     Route::delete('/notes/{note}', [NoteController::class, 'destroy'])->name('notes.destroy');
+
+    // Links - Add/Delete Links for Workspaces
+    Route::post('/links', [LinkController::class, 'store'])->name('links.store');
+    Route::delete('/links/{link}', [LinkController::class, 'destroy'])->name('links.destroy');
 
     // Document management
     Route::get('/documents', [DocumentController::class, 'overview'])->name('documents.overview');

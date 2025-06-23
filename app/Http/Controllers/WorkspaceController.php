@@ -49,6 +49,8 @@ class WorkspaceController extends Controller
 
     public function show(Workspace $workspace)
     {
+        // Eager load notes and links
+        $workspace->load(['notes', 'links']);
         return view('workspaces.show', compact('workspace'));
     }
 }
