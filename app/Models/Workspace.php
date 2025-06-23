@@ -25,7 +25,7 @@ class Workspace extends Model
     {
         return $this->hasMany(Link::class);
     }
-}
+
 
 
     public function user()
