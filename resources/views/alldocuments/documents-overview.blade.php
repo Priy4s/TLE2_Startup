@@ -13,15 +13,15 @@
                 <div id="filter-container" class="mb-4 flex flex-wrap items-center gap-2">
                     <span class="text-sm font-medium text-gray-700 dark:text-gray-300 mr-2">Filter:</span>
                     @php
-                        $filterOptions = ['google', 'microsoft', 'word', 'powerpoint', 'pdf', 'local'];
+                        $filterOptions = ['document', 'powerpoint', 'excel', 'form', 'pdf', 'google', 'microsoft', 'local'];
                         $baseClass = 'px-3 py-1 text-sm font-medium rounded-full cursor-pointer transition';
-                        $activeClass = 'bg-blue-600 text-white';
-                        $inactiveClass = 'bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600';
+                        $activeClass = 'bg-accentGreen text-greenLight dark:bg-articleBlue dark:text-viridian';
+                        $inactiveClass = 'bg-articleBlue text-viridian dark:bg-accentBlue dark:text-articleBlue hover:bg-accentGreen dark:hover:bg-accentGreen';
                     @endphp
 
                     {{-- 'Alles' knop --}}
                     <button data-filter="all" class="{{ $baseClass }} {{ empty($activeFilters) ? $activeClass : $inactiveClass }}">
-                        Alles
+                        All
                     </button>
 
                     {{-- Dynamische filterknoppen --}}
@@ -73,28 +73,32 @@
 
         <h2 class="text-2xl font-bold mb-2">Documents</h2>
         <div>
-            <ul class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[2vw]">
+            <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-[2vw]">
                 @forelse($files as $file)
-                    <li class="bg-articleBlue dark:bg-accentBlue p-4 rounded shadow relative w-[24vw] flex justify-between items-center">
-                        <a href="{{ $file->web_view_link }}" target="_blank" class="max-w-[12vw] break-words text-viridian hover:text-accentBlue dark:text-greenLight dark:hover:text-articleBlue">
+                    <li class="bg-articleBlue dark:bg-accentBlue p-4 rounded shadow relative w-[18vw] flex justify-between items-center">
+                        <a href="{{ $file->web_view_link }}" target="_blank" aria-label="{{ $file->name }}" class="max-w-[12vw] overflow-hidden overflow-ellipsis whitespace-nowrap text-viridian hover:text-accentBlue dark:text-greenLight dark:hover:text-articleBlue">
                             {{ $file->name }}
                         </a>
-                        <div class="w-28 flex justify-between mr-1">
+                        <div class="w-5 flex justify-between mr-1">
                             @if($file->mime_type == 'application/vnd.google-apps.spreadsheet')
-                                <span class="text-xs bg-green-200 text-green-800 dark:bg-green-800 dark:text-green-100 font-semibold px-2 py-1 rounded-full">Sheets</span>
+                                <img src="{{ asset('images/sheets.png') }}" alt="Google_Sheets"/>
                             @elseif($file->mime_type == 'application/vnd.openxmlformats-officedocument.presentationml.presentation' || $file->mime_type == 'application/vnd.google-apps.presentation')
-                                <span class="text-xs bg-orange-200 text-orange-800 dark:bg-orange-800 dark:text-orange-100 font-semibold px-2 py-1 rounded-full">Slides</span>
+                                <img src="{{ asset('images/slides.png') }}" alt="Google_Slides"/>
                             @elseif($file->mime_type == 'application/vnd.google-apps.form')
-                                <span class="text-xs bg-purple-200 text-purple-800 dark:bg-purple-800 dark:text-purple-100 font-semibold px-2 py-1 rounded-full">Forms</span>
+                                <img src="{{ asset('images/forms.png') }}" alt="Google_Forms"/>
                             @elseif($file->mime_type == 'application/vnd.google-apps.document')
-                                <span class="text-xs bg-blue-200 text-blue-800 dark:bg-blue-900 dark:text-blue-100 font-semibold px-2 py-1 rounded-full">Docs</span>
+                                <img src="{{ asset('images/docs.png') }}" alt="Google_Docs"/>
+                            @elseif($file->mime_type == 'application/pdf')
+                                <img src="{{ asset('images/pdf.png') }}" alt="File_PDF"/>
+{{--                            @elseif($file->mime_type == 'application/pdf') MS WORD--}}
+{{--                                <img src="{{ asset('images/pdf.png') }}" alt="File_PDF"/>--}}
+{{--                            @elseif($file->mime_type == 'application/pdf') MS EXCEL--}}
+{{--                                <img src="{{ asset('images/pdf.png') }}" alt="File_PDF"/>--}}
+{{--                            @elseif($file->mime_type == 'application/pdf') MS PPT--}}
+{{--                                <img src="{{ asset('images/pdf.png') }}" alt="File_PDF"/>--}}
                             @else
-                                <span class="text-xs bg-gray-200 text-gray-800 dark:bg-gray-800 dark:text-gray-100 font-semibold px-2 py-1 rounded-full">Other</span>
+                                <img src="{{ asset('images/other.png') }}" alt="File_Other"/>
                             @endif
-                            <span class="ml-2 text-xs font-semibold px-2 py-1 rounded-full
-                                @if($file->provider == 'google') bg-red-200 text-red-800 dark:bg-red-900 dark:text-red-200 @elseif($file->provider == 'microsoft') bg-blue-200 text-blue-800 dark:bg-blue-900 dark:text-blue-200 @else bg-gray-200 text-gray-800 dark:bg-gray-900 dark:text-gray-200 @endif">
-                                {{ ucfirst($file->provider) }}
-                            </span>
                         </div>
                     </li>
                 @empty

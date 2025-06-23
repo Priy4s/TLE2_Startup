@@ -5,19 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kikkerman Customizer</title>
     <style>
-        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #1f2937; }
-        .customizer { display: flex; gap: 50px; align-items: center; background-color: #2b6561; padding: 40px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f0f0f0; }
+        .customizer { display: flex; gap: 50px; align-items: center; background: white; padding: 40px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
 
+        /* De kikker container */
         #kikker-container {
-            position: relative;
+            position: relative; /* Dit is de sleutel voor het stapelen! */
             width: 300px;
             height: 300px;
         }
 
-
         /* Alle lagen (kikker + cosmetics) */
         #kikker-container img {
-            position: absolute;
+            position: absolute; /* Alle lagen zweven op dezelfde plek */
             top: 0;
             left: 0;
             width: 100%;
@@ -39,8 +39,8 @@
 <div class="customizer">
     <!-- De Kikker Visual -->
     <div id="kikker-container">
-        <img id="base-kikker" src="{{ asset('cosmetics/lefrog.png') }}" alt="Le Frog">
-{{--        <img id="color-layer" src="" alt="">--}}
+        <img id="base-kikker" src="<?php echo e(asset('cosmetics/lefrog.png')); ?>" alt="Le Frog">
+
         <img id="lower-layer" src="" alt="">
         <img id="upper-layer" src="" alt="">
     </div>
@@ -68,8 +68,6 @@
             <span id="color-name" class="item-name">None</span>
             <div class="arrow-btn" data-category="color" data-direction="1">></div>
         </div>
-        <p><a href="{{ route('lootbox.index') }}" class="font-medium text-3xl">Open your daily lootbox!</a></p>
-        <p><a href="{{ route('dashboard') }}" class="font-medium text-3xl">Take me back home</a></p>
     </div>
 </div>
 
@@ -77,7 +75,7 @@
     document.addEventListener('DOMContentLoaded', function() {
 
         // 1. Haal de data op van Laravel en zet een "None" optie erbij
-        const userCosmetics = @json($cosmetics);
+        const userCosmetics = <?php echo json_encode($cosmetics, 15, 512) ?>;
 
         const inventory = {
             upper: [{name: 'None', image_path: ''}, ...(userCosmetics.upper || [])],
@@ -121,15 +119,15 @@
                 // Als de categorie 'color' is, verander de basiskikker
                 if (currentItem.image_path) {
                     // Gebruik de nieuwe gekleurde kikker afbeelding
-                    baseKikker.src = `{{ asset('cosmetics/') }}/${currentItem.image_path}`;
+                    baseKikker.src = `<?php echo e(asset('cosmetics/')); ?>/${currentItem.image_path}`;
                 } else {
                     // Geen kleur geselecteerd? Ga terug naar de standaard kikker.
-                    baseKikker.src = `{{ asset('cosmetics/lefrog.png') }}`;
+                    baseKikker.src = `<?php echo e(asset('cosmetics/lefrog.png')); ?>`;
                 }
             } else {
                 // Voor 'upper' en 'lower', werk de overlay-laag bij (zoals voorheen)
                 if (currentItem.image_path) {
-                    layers[category].src = `{{ asset('cosmetics/') }}/${currentItem.image_path}`;
+                    layers[category].src = `<?php echo e(asset('cosmetics/')); ?>/${currentItem.image_path}`;
                 } else {
                     layers[category].src = ''; // Verberg de laag
                 }
@@ -164,4 +162,4 @@
 </script>
 
 </body>
-</html>
+</html><?php /**PATH C:\Users\nbjja\PhpstormProjects\TLE2_Startup\resources\views/kikkerman.blade.php ENDPATH**/ ?>

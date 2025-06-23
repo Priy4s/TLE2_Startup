@@ -38,7 +38,8 @@ Route::get('/', function () {
 
 Route::get('/lootbox', function () {
     return view('lootbox');
-});
+})->name('lootbox.index');
+
 
 Route::get('/kikkerman', [KikkermanController::class, 'index'])
     ->middleware('auth') // Zorg dat alleen ingelogde gebruikers erbij kunnen
