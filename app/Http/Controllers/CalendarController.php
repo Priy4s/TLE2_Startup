@@ -10,7 +10,9 @@ class CalendarController extends Controller
 {
     public function index(Request $request)
     {
-        $events = Calendar::orderBy('date')->get();
+        $events = Calendar::where('user_id', auth()->id())
+            ->orderBy('date')
+            ->get();
 
         $month = $request->query('month', now()->month);
         $year = $request->query('year', now()->year);
@@ -45,6 +47,7 @@ class CalendarController extends Controller
         Calendar::create([
             'event' => $validated['event'],
             'date' => $datetime,
+            'user_id' => auth()->id(),
         ]);
 
         return redirect()->route('calendar.index')->with('success', 'Event created!');
