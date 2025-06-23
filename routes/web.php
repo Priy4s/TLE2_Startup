@@ -76,4 +76,6 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/lootbox/open', [LootboxController::class, 'open'])->name('lootbox.open');
 });
 
+
+Route::post('/workspaces/add-document', [WorkspaceController::class, 'addDocumentToSelected'])->name('workspaces.addDocumentToSelected');
 require __DIR__.'/auth.php';
