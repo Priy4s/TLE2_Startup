@@ -23,7 +23,9 @@ class WorkspaceController extends Controller
         $request->validate(['name' => 'required|string|max:255']);
 
         Workspace::create([
-            'name' => $request->name
+            'name' => $request->name,
+            'user_id' => auth()->id(),
+
         ]);
 
         return redirect()->route('workspaces.index');
@@ -51,4 +53,36 @@ class WorkspaceController extends Controller
     {
         return view('workspaces.show', compact('workspace'));
     }
+
+    public function addDocumentToSelected(Request $request)
+    {
+
+        $request->validate([
+            'workspace_id' => 'required|exists:workspaces,id',
+            'cloudfile_id' => 'required|exists:cloud_drive_files,id',
+        ]);
+
+        $workspace = Workspace::findOrFail($request->workspace_id);
+        $cloudFileId = $request->cloudfile_id;
+
+        $workspace->cloudFiles()->attach($cloudFileId);
+
+        return redirect()->back()->with('success', 'Document successfully added to workspace.');
+    }
+
+    public function removeDocumentFromWorkspace(Request $request)
+    {
+        $request->validate([
+            'workspace_id' => 'required|exists:workspaces,id',
+            'cloudfile_id' => 'required|exists:cloud_drive_files,id',
+        ]);
+
+        $workspace = Workspace::findOrFail($request->workspace_id);
+        $cloudFileId = $request->cloudfile_id;
+
+        $workspace->cloudFiles()->detach($cloudFileId);
+
+        return redirect()->back()->with('success', 'Document successfully removed from workspace.');
+    }
+
 }

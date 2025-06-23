@@ -35,4 +35,18 @@
             <p class="text-gray-500 mt-2">Er zijn nog geen notities voor deze workspace.</p>
         @endif
     </div>
+
+    <ul>
+        @foreach($workspace->cloudFiles as $file)
+            <li>
+                <a href="{{ $file->web_view_link }}" target="_blank">{{ $file->name }}</a>
+                <form method="POST" action="{{ route('workspaces.removeDocument') }}" style="display:inline;">
+                    @csrf
+                    <input type="hidden" name="workspace_id" value="{{ $workspace->id }}">
+                    <input type="hidden" name="cloudfile_id" value="{{ $file->id }}">
+                    <button type="submit" class="text-red-500 hover:text-red-700">Remove</button>
+                </form>
+            </li>
+        @endforeach
+    </ul>
 </x-nav>
