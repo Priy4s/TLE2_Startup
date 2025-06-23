@@ -98,6 +98,7 @@ class DocumentController extends Controller
             'synced_at'     => now(),
         ]);
 
+
         return redirect()->route('documents.overview')->with('status', 'File uploaded successfully!');
     }
 

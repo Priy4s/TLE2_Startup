@@ -56,6 +56,7 @@ class WorkspaceController extends Controller
 
     public function addDocumentToSelected(Request $request)
     {
+
         $request->validate([
             'workspace_id' => 'required|exists:workspaces,id',
             'cloudfile_id' => 'required|exists:cloud_drive_files,id',
