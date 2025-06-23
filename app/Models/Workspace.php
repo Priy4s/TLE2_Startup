@@ -2,14 +2,21 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use App\Models\CloudFile;
+use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 
 
 class Workspace extends Model
 {
-    protected $fillable = ['name', 'user_id'];
+    protected $fillable = ['name'];
+    // Of als je alle velden wilt toestaan:
+    // protected $guarded = [];
+
+    public function notes()
+    {
+        return $this->hasMany(Note::class);
+    }
 
     public function cloudFiles()
     {
@@ -21,5 +28,4 @@ class Workspace extends Model
     {
         return $this->belongsTo(User::class);
     }
-
 }
