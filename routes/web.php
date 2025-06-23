@@ -2,9 +2,12 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\WorkspaceController;
+use App\Http\Controllers\LootboxController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\DocumentController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\KikkermanController;
+use App\Http\Controllers\CalendarController;
 
 use App\Http\Controllers\MicrosoftController;
 
@@ -37,6 +40,16 @@ Route::get('/lootbox', function () {
     return view('lootbox');
 });
 
+Route::get('/kikkerman', [KikkermanController::class, 'index'])
+    ->middleware('auth') // Zorg dat alleen ingelogde gebruikers erbij kunnen
+    ->name('kikkerman.index');
+
+//Route::resource('workspaces', WorkspaceController::class)->middleware('auth');
+Route::resource('calendar', CalendarController::class);
+
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', function () {
         return view('dashboard');
@@ -57,6 +70,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/auth/google/callback', [GoogleController::class, 'handleGoogleCallback'])->name('google.callback');
     Route::post('/google/disconnect', [GoogleController::class, 'disconnectGoogle'])->name('google.disconnect');
     Route::get('/google/check', [GoogleController::class, 'checkConnection'])->name('google.check');
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::post('/lootbox/open', [LootboxController::class, 'open'])->name('lootbox.open');
 });
 
 require __DIR__.'/auth.php';
