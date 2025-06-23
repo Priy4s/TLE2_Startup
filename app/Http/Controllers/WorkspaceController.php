@@ -69,4 +69,19 @@ class WorkspaceController extends Controller
         return redirect()->back()->with('success', 'Document successfully added to workspace.');
     }
 
+    public function removeDocumentFromWorkspace(Request $request)
+    {
+        $request->validate([
+            'workspace_id' => 'required|exists:workspaces,id',
+            'cloudfile_id' => 'required|exists:cloud_drive_files,id',
+        ]);
+
+        $workspace = Workspace::findOrFail($request->workspace_id);
+        $cloudFileId = $request->cloudfile_id;
+
+        $workspace->cloudFiles()->detach($cloudFileId);
+
+        return redirect()->back()->with('success', 'Document successfully removed from workspace.');
+    }
+
 }

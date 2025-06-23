@@ -113,7 +113,6 @@
                         </button>
                     </form>
 
-
                 </li>
             @empty
                 <li class="text-gray-500 mt-4">No documents found. Try connecting an account and syncing.</li>
@@ -184,4 +183,18 @@
     function closeModal(id) {
         document.getElementById('modal-' + id).classList.add('hidden');
     }
+    document.getElementById('file').addEventListener('change', function () {
+        const file = this.files[0];
+        const info = document.getElementById('file-info');
+
+        if (file && file.size > 10 * 1024 * 1024) { // 10 MB
+            info.textContent = 'File is bigger than 10 MB. Please select a smaller file.';
+            this.value = ''; // reset input
+        } else if (file) {
+            info.textContent = `Selected file: ${file.name} (${(file.size / (1024 * 1024)).toFixed(2)} MB)`;
+        } else {
+            info.textContent = '';
+        }
+    });
+
 </script>
