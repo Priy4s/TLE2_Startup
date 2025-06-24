@@ -65,4 +65,10 @@ class User extends Authenticatable
         });
     }
 
+    public function workspaces()
+    {
+        return $this->hasMany(Workspace::class);
+    }
+
+
 }

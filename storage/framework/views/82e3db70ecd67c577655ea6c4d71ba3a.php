@@ -5,34 +5,32 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
     <title>Lootbox</title>
 
-
+    <!-- AI generated css voor heel de pagina MOET NOG VERANDEREN!!!!! -->
     <style>
         body {
             font-family: sans-serif;
-            color: whitesmoke;
-            background-color: #2b6561;
         }
 
         .popup-overlay {
-            display: none;
+            display: none; /* Standaard verborgen */
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: #2b6561;
-            display: flex;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex; /* Gebruik flex om te centreren */
             justify-content: center;
             align-items: center;
             z-index: 10000;
-            display: none;
+            display: none; /* Standaard weer verbergen */
         }
 
         .popup-content {
-            background-color: #2b6561;
+            background-color: white;
             padding: 30px;
             border-radius: 10px;
             text-align: center;
@@ -75,10 +73,10 @@
     </style>
 </head>
 <body>
-<p><a href="{{ route('kikkerman.index') }}" class="font-medium text-3xl">Back to your kikkerman!</a></p>
+
 <p>You can claim your next lootbox in:</p>
 <p id="timer"></p>
-<button id="claimBtn" style="display: none; background-color: #2b6561; color: white">Claim Lootbox</button>
+<button id="claimBtn" style="display: none;">Claim Lootbox</button>
 
 <div id="videoContainer" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0,0,0,0.8); justify-content: center; align-items: center; z-index: 9999;">
     <video id="lootboxVideo" width="600"></video>
@@ -143,7 +141,7 @@
 
         function showLootboxAnimation(callback) {
             video.currentTime = 0;
-            video.src = "{{ asset('images/ChestOpening.mp4') }}";
+            video.src = "<?php echo e(asset('images/ChestOpening.mp4')); ?>";
             videoContainer.style.display = "flex";
             video.play();
             video.onended = () => {
@@ -176,7 +174,7 @@
             claimBtn.addEventListener("click", () => {
                 claimBtn.disabled = true;
                 claimBtn.textContent = 'Claiming...';
-                fetch("{{ route('lootbox.open') }}", {
+                fetch("<?php echo e(route('lootbox.open')); ?>", {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -207,4 +205,4 @@
 </script>
 
 </body>
-</html>
+</html><?php /**PATH C:\Users\nbjja\PhpstormProjects\TLE2_Startup\resources\views/lootbox.blade.php ENDPATH**/ ?>
