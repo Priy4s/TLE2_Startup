@@ -21,6 +21,12 @@ class Workspace extends Model
         return $this->belongsToMany(CloudFile::class, 'workspace_cloudfile', 'workspace_id', 'cloudfile_id');
     }
 
+    public function links()
+    {
+        return $this->hasMany(Link::class);
+    }
+
+
 
     public function user()
     {
