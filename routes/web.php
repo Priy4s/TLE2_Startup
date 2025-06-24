@@ -25,9 +25,7 @@ Route::get('/debug-token', function () {
 });
 
 // Public routes
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [WorkspaceController::class, 'index']);
 
 Route::get('/lootbox', function () {
     return view('lootbox');
