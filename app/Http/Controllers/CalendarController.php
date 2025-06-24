@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Calendar;
 use Illuminate\Support\Carbon;
+use App\Models\Workspace;
 
 class CalendarController extends Controller
 {
@@ -16,11 +17,13 @@ class CalendarController extends Controller
 
         $month = $request->query('month', now()->month);
         $year = $request->query('year', now()->year);
+        $workspaces = Workspace::where('user_id', auth()->id())->get();
 
         return view('calendar.index', [
             'events' => $events,
             'currentMonth' => $month,
             'currentYear' => $year,
+            'workspaces' => $workspaces,
         ]);
     }
 
@@ -40,6 +43,7 @@ class CalendarController extends Controller
         $validated = $request->validate([
             'event' => 'required|string|max:255',
             'date' => 'required|date',
+            'workspace_id' => 'nullable|exists:workspaces,id',
         ]);
 
         $datetime = \Carbon\Carbon::parse($validated['date'])->format('Y-m-d H:i:s');
@@ -48,6 +52,7 @@ class CalendarController extends Controller
             'event' => $validated['event'],
             'date' => $datetime,
             'user_id' => auth()->id(),
+            'workspace_id' => $validated['workspace_id'],
         ]);
 
         return redirect()->route('calendar.index')->with('success', 'Event created!');
@@ -67,6 +72,7 @@ class CalendarController extends Controller
     public function edit(string $id)
     {
         $event = Calendar::findOrFail($id);
+        $workspaces = Workspace::where('user_id', auth()->id())->get();
         return view('calendar.edit', compact('event'));
     }
 
@@ -78,6 +84,7 @@ class CalendarController extends Controller
         $validated = $request->validate([
             'event' => 'required|string|max:255',
             'date' => 'required|date',
+            'workspace_id' => 'nullable|exists:workspaces,id',
         ]);
 
         $event = Calendar::findOrFail($id);
