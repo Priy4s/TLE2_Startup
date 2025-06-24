@@ -5510,5 +5510,5 @@
 #56 C:\\Users\\Senna\\CMGT Jaar 2\\TLE2_Startup\\public\\index.php(17): Illuminate\\Foundation\\Application->handleRequest(Object(Illuminate\\Http\\Request))
 #57 C:\\Users\\Senna\\CMGT Jaar 2\\TLE2_Startup\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(23): require_once('C:\\\\Users\\\\Senna\\\\...')
 #58 {main}
-"} 
-[2025-06-23 08:59:48] local.ERROR: Microsoft Sync Failed {"message":"cURL error 60: SSL certificate problem: unable to get local issuer certificate (see https://curl.haxx.se/libcurl/c/libcurl-errors.html) for https://login.microsoftonline.com/0ce640f1-64cf-429e-b536-e01646355cbb/oauth2/v2.0/token"} 
+"}
+[2025-06-23 08:59:48] local.ERROR: Microsoft Sync Failed {"message":"cURL error 60: SSL certificate problem: unable to get local issuer certificate (see https://curl.haxx.se/libcurl/c/libcurl-errors.html) for https://login.microsoftonline.com/0ce640f1-64cf-429e-b536-e01646355cbb/oauth2/v2.0/token"}

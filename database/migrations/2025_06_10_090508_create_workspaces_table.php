@@ -18,6 +18,17 @@ return new class extends Migration
         });
     }
 
+#Schema::create('workspace_items', function (Blueprint $table) {
+       # $table->id();
+       # $table->foreignId('workspace_id')->constrained()->onDelete('cascade');
+        #$table->enum('type', ['file', 'link', 'deadline', 'note']);
+       # $table->text('content')->nullable(); // voor tekst, link of notitie
+        #$table->string('file_path')->nullable(); // voor bestandsupload
+       # $table->timestamp('deadline')->nullable(); // voor deadlines
+       # $table->timestamps();
+    #});
+
+
     /**
      * Reverse the migrations.
      */
