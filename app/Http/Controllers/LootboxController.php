@@ -12,7 +12,7 @@ class LootboxController extends Controller
         $user = Auth::user();
 
         // Pas dit aan om meer items toe te voegen
-        $items = ['Hat', 'Blue Color', 'Pants', 'Glasses', 'Pink Color'];
+        $items = ['Hat', 'Blue Color', 'Pants', 'Glasses', 'Pink Color', 'Cool Shirt'];
         $randomItemName = $items[array_rand($items)];
         $item = Item::firstOrCreate(['name' => $randomItemName]);
 

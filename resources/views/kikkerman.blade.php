@@ -41,8 +41,8 @@
     <div id="kikker-container">
         <img id="base-kikker" src="{{ asset('cosmetics/lefrog.png') }}" alt="Le Frog">
 {{--        <img id="color-layer" src="" alt="">--}}
-        <img id="lower-layer" src="" alt="">
-        <img id="upper-layer" src="" alt="">
+        <img id="lower-layer" src="{{ asset('cosmetics/empty2.png') }}" alt="">
+        <img id="upper-layer" src="{{ asset('cosmetics/empty2.png') }}" alt="">
     </div>
 
     <!-- De Knoppen -->
@@ -93,9 +93,9 @@
         };
 
         // 3. Referenties naar de HTML-elementen
-        const baseKikker = document.getElementById('base-kikker'); // AANGEPAST: Directe referentie naar de basiskikker
+        const baseKikker = document.getElementById('base-kikker');
 
-        // AANGEPAST: 'color' is hieruit verwijderd
+
         const layers = {
             upper: document.getElementById('upper-layer'),
             lower: document.getElementById('lower-layer')
@@ -116,27 +116,22 @@
             // Update altijd de naam
             names[category].textContent = currentItem.name;
 
-            // --- DIT IS DE KERN VAN DE WIJZIGING ---
             if (category === 'color') {
-                // Als de categorie 'color' is, verander de basiskikker
                 if (currentItem.image_path) {
-                    // Gebruik de nieuwe gekleurde kikker afbeelding
                     baseKikker.src = `{{ asset('cosmetics/') }}/${currentItem.image_path}`;
                 } else {
-                    // Geen kleur geselecteerd? Ga terug naar de standaard kikker.
                     baseKikker.src = `{{ asset('cosmetics/lefrog.png') }}`;
                 }
             } else {
-                // Voor 'upper' en 'lower', werk de overlay-laag bij (zoals voorheen)
                 if (currentItem.image_path) {
                     layers[category].src = `{{ asset('cosmetics/') }}/${currentItem.image_path}`;
                 } else {
-                    layers[category].src = ''; // Verberg de laag
+                    layers[category].src = '';
                 }
             }
         }
 
-        // 5. Maak de pijltjes-knoppen functioneel (deze code blijft hetzelfde)
+        // 5. Maak de pijltjes-knoppen functioneel
         document.querySelectorAll('.arrow-btn').forEach(button => {
             button.addEventListener('click', () => {
                 const category = button.dataset.category;
