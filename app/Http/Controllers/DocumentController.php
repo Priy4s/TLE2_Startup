@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Workspace;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use App\Models\CloudFile;
 
-// Importeer de benodigde classes voor BEIDE services
 use Google\Client as GoogleClient;
 use Google\Service\Drive as GoogleDrive;
 use League\OAuth2\Client\Provider\GenericProvider as MicrosoftClient;
@@ -41,6 +41,8 @@ class DocumentController extends Controller
         }
 
         $activeFilters = $request->input('filters', []);
+        $userWorkspaces = Workspace::where('user_id', auth()->id())->get();
+
 
         if (!empty($activeFilters)) {
 
@@ -52,14 +54,20 @@ class DocumentController extends Controller
                         case 'local':
                             $q->orWhere('provider', $filter);
                             break;
-                        case 'word':
-                            $q->orWhereIn('mime_type', ['application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']);
+                        case 'document':
+                            $q->orWhereIn('mime_type', ['application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.google-apps.document']);
                             break;
                         case 'powerpoint':
-                            $q->orWhereIn('mime_type', ['application/vnd.ms-powerpoint', 'application/vnd.openxmlformats-officedocument.presentationml.presentation']);
+                            $q->orWhereIn('mime_type', ['application/vnd.ms-powerpoint', 'application/vnd.openxmlformats-officedocument.presentationml.presentation', 'application/vnd.openxmlformats-officedocument.presentationml.presentation', 'application/vnd.google-apps.presentation']);
                             break;
                         case 'pdf':
                             $q->orWhere('mime_type', 'application/pdf');
+                            break;
+                        case 'excel':
+                            $q->orWhere('mime_type', ['application/vnd.google-apps.spreadsheet']);
+                            break;
+                        case 'form':
+                            $q->orWhere('mime_type', ['application/vnd.google-apps.form']);
                             break;
                     }
                 }
@@ -73,7 +81,8 @@ class DocumentController extends Controller
             'files' => $files,
             'lastSyncedAt' => $lastSyncedAt,
             'activeFilters' => $activeFilters,
-            'currentSearch' => $request->search
+            'currentSearch' => $request->search,
+            'userWorkspaces' => $userWorkspaces,
         ]);
     }
 
@@ -94,6 +103,7 @@ class DocumentController extends Controller
             'provider'      => 'local',
             'synced_at'     => now(),
         ]);
+
 
         return redirect()->route('documents.overview')->with('status', 'File uploaded successfully!');
     }
@@ -132,6 +142,7 @@ class DocumentController extends Controller
             Log::error('Google Sync Failed', ['message' => $e->getMessage()]);
         }
     }
+
 
     /**
      * NIEUW TOEGEVOEGD: Synchroniseert bestanden van Microsoft OneDrive.

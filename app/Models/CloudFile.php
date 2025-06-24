@@ -45,4 +45,9 @@ class CloudFile extends Model
     {
         return $query->where('synced_at', '>=', now()->subMinutes($minutes));
     }
+
+    public function workspaces()
+    {
+        return $this->belongsToMany(Workspace::class, 'workspace_cloudfile', 'cloudfile_id', 'workspace_id');
+    }
 }

@@ -5,19 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kikkerman Customizer</title>
     <style>
-        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f0f0f0; }
-        .customizer { display: flex; gap: 50px; align-items: center; background: white; padding: 40px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #1f2937; }
+        .customizer { display: flex; gap: 50px; align-items: center; background-color: #2b6561; padding: 40px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
 
-        /* De kikker container */
         #kikker-container {
-            position: relative; /* Dit is de sleutel voor het stapelen! */
+            position: relative;
             width: 300px;
             height: 300px;
         }
 
+
         /* Alle lagen (kikker + cosmetics) */
         #kikker-container img {
-            position: absolute; /* Alle lagen zweven op dezelfde plek */
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
@@ -68,6 +68,8 @@
             <span id="color-name" class="item-name">None</span>
             <div class="arrow-btn" data-category="color" data-direction="1">></div>
         </div>
+        <p><a href="{{ route('lootbox.index') }}" class="font-medium text-3xl">Open your daily lootbox!</a></p>
+        <p><a href="{{ route('dashboard') }}" class="font-medium text-3xl">Take me back home</a></p>
     </div>
 </div>
 

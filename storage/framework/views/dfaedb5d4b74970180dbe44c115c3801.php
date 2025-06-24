@@ -284,6 +284,4 @@
 <?php if (isset($__componentOriginalff09156f73c896030ee75284e9b2c466)): ?>
 <?php $component = $__componentOriginalff09156f73c896030ee75284e9b2c466; ?>
 <?php unset($__componentOriginalff09156f73c896030ee75284e9b2c466); ?>
-<?php endif; ?>
-
-<?php /**PATH C:\CMGT\Jaar_2\TLE2_Startup\resources\views/calendar/index.blade.php ENDPATH**/ ?>
+<?php endif; ?><?php /**PATH C:\CMGT\Jaar_2\TLE2_Startup\resources\views/calendar/index.blade.php ENDPATH**/ ?>

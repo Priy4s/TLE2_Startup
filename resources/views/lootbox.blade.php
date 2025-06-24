@@ -8,29 +8,31 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Lootbox</title>
 
-    <!-- AI generated css voor heel de pagina MOET NOG VERANDEREN!!!!! -->
+
     <style>
         body {
             font-family: sans-serif;
+            color: whitesmoke;
+            background-color: #2b6561;
         }
 
         .popup-overlay {
-            display: none; /* Standaard verborgen */
+            display: none;
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            display: flex; /* Gebruik flex om te centreren */
+            background-color: #2b6561;
+            display: flex;
             justify-content: center;
             align-items: center;
             z-index: 10000;
-            display: none; /* Standaard weer verbergen */
+            display: none;
         }
 
         .popup-content {
-            background-color: white;
+            background-color: #2b6561;
             padding: 30px;
             border-radius: 10px;
             text-align: center;
@@ -73,10 +75,10 @@
     </style>
 </head>
 <body>
-
+<p><a href="{{ route('kikkerman.index') }}" class="font-medium text-3xl">Back to your kikkerman!</a></p>
 <p>You can claim your next lootbox in:</p>
 <p id="timer"></p>
-<button id="claimBtn" style="display: none;">Claim Lootbox</button>
+<button id="claimBtn" style="display: none; background-color: #2b6561; color: white">Claim Lootbox</button>
 
 <div id="videoContainer" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0,0,0,0.8); justify-content: center; align-items: center; z-index: 9999;">
     <video id="lootboxVideo" width="600"></video>
