@@ -9,7 +9,8 @@ use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\KikkermanController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\MicrosoftController;
-use App\Http\Controllers\NoteController; // <-- Added
+use App\Http\Controllers\NoteController;
+use App\Http\Controllers\LinkController; // <-- NEW
 
 // Microsoft routes
 Route::get('/microsoft/login', [MicrosoftController::class, 'redirectToProvider'])->name('microsoft.login');
@@ -24,9 +25,7 @@ Route::get('/debug-token', function () {
 });
 
 // Public routes
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [WorkspaceController::class, 'index']);
 
 Route::get('/lootbox', function () {
     return view('lootbox');
@@ -55,6 +54,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/notes', [NoteController::class, 'store'])->name('notes.store');
     Route::delete('/notes/{note}', [NoteController::class, 'destroy'])->name('notes.destroy');
 
+    // Links - Add/Delete Links for Workspaces
+    Route::post('/links', [LinkController::class, 'store'])->name('links.store');
+    Route::delete('/links/{link}', [LinkController::class, 'destroy'])->name('links.destroy');
+
     // Document management
     Route::get('/documents', [DocumentController::class, 'overview'])->name('documents.overview');
     Route::post('/documents/upload', [DocumentController::class, 'upload'])->name('documents.upload');
@@ -71,4 +74,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/lootbox/open', [LootboxController::class, 'open'])->name('lootbox.open');
 });
 
+Route::post('/workspaces/remove-document', [WorkspaceController::class, 'removeDocumentFromWorkspace'])->name('workspaces.removeDocument');
+
+Route::post('/workspaces/add-document', [WorkspaceController::class, 'addDocumentToSelected'])->name('workspaces.addDocumentToSelected');
 require __DIR__.'/auth.php';
