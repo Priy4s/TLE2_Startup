@@ -21,17 +21,20 @@
     <!-- Menu -->
     <ul class="mt-10 flex flex-col">
         <li class="inline my-4">
-            <a href="" class="font-medium text-3xl">Dashboard</a>
-        </li>
-        <li class="inline my-4">
             <a href="<?php echo e(route('documents.overview')); ?>" class="font-medium text-3xl">Documents</a>
         </li>
         <li class="inline my-4">
             <a href="<?php echo e(route('workspaces.index')); ?>" class="font-medium text-3xl">Workspaces</a>
         </li>
         <li class="inline my-4">
-            <a href="" class="font-medium text-3xl">Calendar</a>
+            <a href="<?php echo e(route('calendar.index')); ?>" class="font-medium text-3xl">Calendar</a>
+
         </li>
+        <li class="inline my-4">
+            <a href="<?php echo e(route('kikkerman.index')); ?>" class="font-medium text-3xl">Kikkerman</a>
+
+        </li>
+
     </ul>
     </div>
     <div>
