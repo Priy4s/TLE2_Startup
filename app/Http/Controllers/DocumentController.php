@@ -54,14 +54,20 @@ class DocumentController extends Controller
                         case 'local':
                             $q->orWhere('provider', $filter);
                             break;
-                        case 'word':
-                            $q->orWhereIn('mime_type', ['application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']);
+                        case 'document':
+                            $q->orWhereIn('mime_type', ['application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.google-apps.document']);
                             break;
                         case 'powerpoint':
-                            $q->orWhereIn('mime_type', ['application/vnd.ms-powerpoint', 'application/vnd.openxmlformats-officedocument.presentationml.presentation']);
+                            $q->orWhereIn('mime_type', ['application/vnd.ms-powerpoint', 'application/vnd.openxmlformats-officedocument.presentationml.presentation', 'application/vnd.openxmlformats-officedocument.presentationml.presentation', 'application/vnd.google-apps.presentation']);
                             break;
                         case 'pdf':
                             $q->orWhere('mime_type', 'application/pdf');
+                            break;
+                        case 'excel':
+                            $q->orWhere('mime_type', ['application/vnd.google-apps.spreadsheet']);
+                            break;
+                        case 'form':
+                            $q->orWhere('mime_type', ['application/vnd.google-apps.form']);
                             break;
                     }
                 }
