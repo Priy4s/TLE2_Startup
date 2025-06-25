@@ -33,8 +33,6 @@
             </div>
             <p><a href="{{ route('lootbox.index') }}" class="bg-viridian text-greenLight px-4 py-2 rounded m-4">Open your daily lootbox!</a></p>
         </div>
-        <p><a href="{{ route('lootbox.index') }}" class="font-medium text-3xl">Open your daily lootbox!</a></p>
-        <p><a href="{{ route('dashboard') }}" class="font-medium text-3xl">Take me back home</a></p>
     </div>
     </div>
 
