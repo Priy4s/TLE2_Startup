@@ -29,7 +29,7 @@ Route::get('/', [WorkspaceController::class, 'index'])->middleware('auth');
 
 Route::get('/lootbox', function () {
     return view('lootbox');
-})->name('lootbox.index');
+})->name('lootbox.index')->middleware('auth');
 
 Route::get('/kikkerman', [KikkermanController::class, 'index'])
     ->middleware('auth')
@@ -51,20 +51,20 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('workspaces', WorkspaceController::class)->middleware('auth');
 
     // Notes - Add/Delete Notes for Workspaces
-    Route::post('/notes', [NoteController::class, 'store'])->name('notes.store');
-    Route::delete('/notes/{note}', [NoteController::class, 'destroy'])->name('notes.destroy');
+    Route::post('/notes', [NoteController::class, 'store'])->name('notes.store')->middleware('auth');
+    Route::delete('/notes/{note}', [NoteController::class, 'destroy'])->name('notes.destroy')->middleware('auth');
 
     // Links - Add/Delete Links for Workspaces
-    Route::post('/links', [LinkController::class, 'store'])->name('links.store');
-    Route::delete('/links/{link}', [LinkController::class, 'destroy'])->name('links.destroy');
+    Route::post('/links', [LinkController::class, 'store'])->name('links.store')->middleware('auth');
+    Route::delete('/links/{link}', [LinkController::class, 'destroy'])->name('links.destroy')->middleware('auth');
 
     // Document management
 
-    Route::get('/documents', [DocumentController::class, 'overview'])->name('documents.overview');
-    Route::post('/documents/upload', [DocumentController::class, 'upload'])->name('documents.upload');
+    Route::get('/documents', [DocumentController::class, 'overview'])->name('documents.overview')->middleware('auth');
+    Route::post('/documents/upload', [DocumentController::class, 'upload'])->name('documents.upload')->middleware('auth');
 
 // NIEUWE ROUTE: Om lokale bestanden veilig te serveren.
-    Route::get('/documents/local/{file}', [DocumentController::class, 'serveLocalFile'])->name('documents.serve.local');
+    Route::get('/documents/local/{file}', [DocumentController::class, 'serveLocalFile'])->name('documents.serve.local')->middleware('auth');
 
     // Google auth
     Route::get('/auth/google', [GoogleController::class, 'redirectToGoogle'])->name('google.login');
@@ -75,12 +75,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 // Lootbox (auth-only route)
 Route::middleware(['auth'])->group(function () {
-    Route::post('/lootbox/open', [LootboxController::class, 'open'])->name('lootbox.open');
+    Route::post('/lootbox/open', [LootboxController::class, 'open'])->name('lootbox.open')->middleware('auth');
 });
 
-Route::post('/workspaces/remove-document', [WorkspaceController::class, 'removeDocumentFromWorkspace'])->name('workspaces.removeDocument');
+Route::post('/workspaces/remove-document', [WorkspaceController::class, 'removeDocumentFromWorkspace'])->name('workspaces.removeDocument')->middleware('auth');
 
-Route::post('/workspaces/add-document', [WorkspaceController::class, 'addDocumentToSelected'])->name('workspaces.addDocumentToSelected');
+Route::post('/workspaces/add-document', [WorkspaceController::class, 'addDocumentToSelected'])->name('workspaces.addDocumentToSelected')->middleware('auth');
 
 
 require __DIR__.'/auth.php';
