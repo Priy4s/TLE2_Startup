@@ -43,7 +43,7 @@
                             </div>
                         </li>
                     @empty
-                        <p class="text-articleBlue">Add documents to this workspace through the documents tab, they'll show up here</p>
+                        <p class="text-accentGreen dark:text-articleBlue">Add documents to this workspace through the documents tab, they'll show up here</p>
                     @endforelse
                 </ul>
             <!-- Notes Section -->
@@ -80,7 +80,7 @@
                             @endforeach
                         </ul>
                     @else
-                        <p class="text-articleBlue mt-2">Make a new note, it will show up here.</p>
+                        <p class="text-accentGreen dark:text-articleBlue mt-2">Make a new note, it will show up here.</p>
                     @endif
                 </div>
 
@@ -124,7 +124,7 @@
                             @endforeach
                         </ul>
                     @else
-                        <p class="text-articleBlue mt-2">Add a new link, it will show up here.</p>
+                        <p class="text-accentGreen dark:text-articleBlue mt-2">Add a new link, it will show up here.</p>
                     @endif
                 </div>
                 <div class="fixed bottom-6 right-6 z-50" id="fabContainer">
@@ -159,7 +159,7 @@
                         @endforeach
                     </ul>
                 @else
-                    <p class="text-gray-500 mt-2">Link events to the workspace through the calendar, they'll show up here.</p>
+                    <p class="text-accentGreen dark:text-articleBlue mt-2">Link events to the workspace through the calendar, they'll show up here.</p>
                 @endif
             </div>
 
