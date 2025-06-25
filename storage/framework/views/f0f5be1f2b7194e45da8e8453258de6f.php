@@ -1,4 +1,4 @@
-<section class="mt-10 mb-7 bg-accentBlue rounded-2xl p-4 w-[50vw]">
+<section class="mt-10 mb-7 bg-articleBlue dark:bg-accentBlue rounded-2xl p-4 w-[50vw]">
     <h2 class="text-xl font-medium text-viridian dark:text-greenLight">Update personal information</h2>
     <form id="send-verification" method="post" action="<?php echo e(route('verification.send')); ?>">
         <?php echo csrf_field(); ?>

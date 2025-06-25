@@ -14,10 +14,4 @@
             </div>
         </div>
     </div>
-    <form method="POST" action="{{ route('logout') }}">
-        @csrf
-        <button type="submit" class="text-red-500 hover:text-red-700">
-            Logout
-        </button>
-    </form>
 </x-nav>

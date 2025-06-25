@@ -40,9 +40,9 @@
     </div>
     <div>
         @auth
-            <a href="{{ route('profile.edit') }}" class="font-medium text-3xl">Profile</a>
+            <a href="{{ route('profile.edit') }}" class="font-medium text-3xl fixed bottom-6 left-6 z-50 hover:underline">Profile</a>
         @else
-            <a href="{{ route('login') }}" class="font-medium text-3xl">Login</a>
+            <a href="{{ route('login') }}" class="font-medium text-3xl fixed bottom-6 left-6 z-50 hover:underline">Login</a>
         @endauth
     </div>
 </nav>

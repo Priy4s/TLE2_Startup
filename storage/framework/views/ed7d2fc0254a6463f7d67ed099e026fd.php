@@ -58,6 +58,12 @@
                     </a>
                 <?php endif; ?>
             </div>
+            <form method="POST" action="<?php echo e(route('logout')); ?>" class="mt-12">
+                <?php echo csrf_field(); ?>
+                <button type="submit" class="text-red-500 hover:text-red-700">
+                    Logout
+                </button>
+            </form>
         </div>
     </div>
  <?php echo $__env->renderComponent(); ?>
