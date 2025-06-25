@@ -26,8 +26,10 @@ class Workspace extends Model
         return $this->hasMany(Link::class);
     }
 
-
-
+    public function calendars()
+    {
+        return $this->hasMany(Calendar::class);
+    }
     public function user()
     {
         return $this->belongsTo(User::class);
