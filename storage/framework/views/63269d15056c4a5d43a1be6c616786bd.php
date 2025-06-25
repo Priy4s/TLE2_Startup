@@ -39,9 +39,9 @@
     </div>
     <div>
         <?php if(auth()->guard()->check()): ?>
-            <a href="<?php echo e(route('profile.edit')); ?>" class="font-medium text-3xl">Profile</a>
+            <a href="<?php echo e(route('profile.edit')); ?>" class="font-medium text-3xl fixed bottom-6 left-6 z-50 hover:underline">Profile</a>
         <?php else: ?>
-            <a href="<?php echo e(route('login')); ?>" class="font-medium text-3xl">Login</a>
+            <a href="<?php echo e(route('login')); ?>" class="font-medium text-3xl fixed bottom-6 left-6 z-50 hover:underline">Login</a>
         <?php endif; ?>
     </div>
 </nav>

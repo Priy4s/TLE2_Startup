@@ -53,7 +53,8 @@ class WorkspaceController extends Controller
     {
         // Eager load notes and links
         $workspace->load(['notes', 'links']);
-        return view('workspaces.show', compact('workspace'));
+        $events = $workspace->calendars()->get();
+        return view('workspaces.show', compact('workspace', 'events'));
     }
 
     public function addDocumentToSelected(Request $request)
