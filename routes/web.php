@@ -25,7 +25,7 @@ Route::get('/debug-token', function () {
 });
 
 // Public routes
-Route::get('/', [WorkspaceController::class, 'index'])->middleware('auth');
+Route::get('/', [WorkspaceController::class, 'index'])->middleware('auth')->name('/');
 
 Route::get('/lootbox', function () {
     return view('lootbox');
