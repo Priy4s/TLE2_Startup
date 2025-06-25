@@ -30,13 +30,21 @@ return [
 
     'disks' => [
 
+        // Deze disk wordt nu minder belangrijk, maar we laten hem staan.
         'local' => [
             'driver' => 'local',
             'root' => storage_path('app/private'),
-            'serve' => true,
             'throw' => false,
         ],
 
+        // DEZE IS CRUCIAAL: Onze eigen disk voor privé-uploads.
+        // De root wijst direct naar de juiste map.
+        'private_uploads' => [
+            'driver' => 'local',
+            'root'   => storage_path('app/private/uploads'),
+        ],
+
+        // Deze is voor publiek toegankelijke bestanden, via de storage link.
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),

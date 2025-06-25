@@ -70,9 +70,17 @@
                 @forelse($files as $file)
                     <li class="bg-articleBlue dark:bg-accentBlue p-4 rounded shadow relative w-[18vw] flex flex-col gap-2">
                         <div class="flex justify-between items-center">
-                            <a href="{{ $file->web_view_link }}" target="_blank" aria-label="{{ $file->name }}" class="max-w-[12vw] overflow-hidden overflow-ellipsis whitespace-nowrap text-viridian hover:text-accentBlue dark:text-greenLight dark:hover:text-articleBlue">
-                                {{ $file->name }}
-                            </a>
+                            @if ($file->provider === 'local')
+                                {{-- Veilige link voor lokale bestanden --}}
+                                <a href="{{ route('documents.serve.local', $file->id) }}" target="_blank" aria-label="{{ $file->name }}" class="max-w-[12vw] overflow-hidden overflow-ellipsis whitespace-nowrap text-viridian hover:text-accentBlue dark:text-greenLight dark:hover:text-articleBlue">
+                                    {{ $file->name }} {{-- De zichtbare tekst van de link --}}
+                                </a> {{-- Correcte sluiting van de link --}}
+                            @else
+                                {{-- Directe link voor cloud-bestanden --}}
+                                <a href="{{ $file->web_view_link }}" target="_blank" aria-label="{{ $file->name }}" class="max-w-[12vw] overflow-hidden overflow-ellipsis whitespace-nowrap text-viridian hover:text-accentBlue dark:text-greenLight dark:hover:text-articleBlue">
+                                    {{ $file->name }} {{-- De zichtbare tekst van de link --}}
+                                </a> {{-- Correcte sluiting van de link --}}
+                            @endif
                             <div class="w-5 flex justify-between mr-1">
                                 @if($file->mime_type == 'application/vnd.google-apps.spreadsheet')
                                     <img src="{{ asset('images/sheets.png') }}" alt="Google_Sheets"/>

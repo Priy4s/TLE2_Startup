@@ -25,7 +25,7 @@ Route::get('/debug-token', function () {
 });
 
 // Public routes
-Route::get('/', [WorkspaceController::class, 'index']);
+Route::get('/', [WorkspaceController::class, 'index'])->middleware('auth');
 
 Route::get('/lootbox', function () {
     return view('lootbox');
@@ -35,7 +35,7 @@ Route::get('/kikkerman', [KikkermanController::class, 'index'])
     ->middleware('auth')
     ->name('kikkerman.index');
 
-Route::resource('calendar', CalendarController::class);
+Route::resource('calendar', CalendarController::class)->middleware('auth');
 
 // Authenticated & Verified User Routes
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -48,7 +48,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // Workspaces CRUD
-    Route::resource('workspaces', WorkspaceController::class);
+    Route::resource('workspaces', WorkspaceController::class)->middleware('auth');
 
     // Notes - Add/Delete Notes for Workspaces
     Route::post('/notes', [NoteController::class, 'store'])->name('notes.store');
@@ -59,8 +59,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/links/{link}', [LinkController::class, 'destroy'])->name('links.destroy');
 
     // Document management
+
     Route::get('/documents', [DocumentController::class, 'overview'])->name('documents.overview');
     Route::post('/documents/upload', [DocumentController::class, 'upload'])->name('documents.upload');
+
+// NIEUWE ROUTE: Om lokale bestanden veilig te serveren.
+    Route::get('/documents/local/{file}', [DocumentController::class, 'serveLocalFile'])->name('documents.serve.local');
 
     // Google auth
     Route::get('/auth/google', [GoogleController::class, 'redirectToGoogle'])->name('google.login');
@@ -77,4 +81,6 @@ Route::middleware(['auth'])->group(function () {
 Route::post('/workspaces/remove-document', [WorkspaceController::class, 'removeDocumentFromWorkspace'])->name('workspaces.removeDocument');
 
 Route::post('/workspaces/add-document', [WorkspaceController::class, 'addDocumentToSelected'])->name('workspaces.addDocumentToSelected');
+
+
 require __DIR__.'/auth.php';

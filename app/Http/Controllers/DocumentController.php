@@ -2,22 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CloudFile;
 use App\Models\Workspace;
+use Exception;
+use Google\Client as GoogleClient;
+use Google\Service\Drive as GoogleDrive;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use App\Models\CloudFile;
-
-use Google\Client as GoogleClient;
-use Google\Service\Drive as GoogleDrive;
 use League\OAuth2\Client\Provider\GenericProvider as MicrosoftClient;
 use Microsoft\Graph\Graph;
 use Microsoft\Graph\Model\DriveItem;
 
 class DocumentController extends Controller
 {
-
     /**
      * Toont een gecombineerd overzicht van alle cloud- en lokale bestanden.
      */
@@ -32,8 +31,8 @@ class DocumentController extends Controller
         }
 
         $query = CloudFile::where('user_id', $user->id)
-                ->where('mime_type', '!=', 'folder/microsoft')
-                ->where('mime_type', '!=', 'application/vnd.google-apps.folder');
+            ->where('mime_type', '!=', 'folder/microsoft')
+            ->where('mime_type', '!=', 'application/vnd.google-apps.folder');
 
 
         if ($request->filled('search')) {
@@ -45,7 +44,6 @@ class DocumentController extends Controller
 
 
         if (!empty($activeFilters)) {
-
             $query->where(function ($q) use ($activeFilters) {
                 foreach ($activeFilters as $filter) {
                     switch ($filter) {
@@ -86,26 +84,72 @@ class DocumentController extends Controller
         ]);
     }
 
+    /**
+     * Slaat een geüpload bestand op een schone en correcte manier op.
+     */
     public function upload(Request $request)
     {
         $request->validate(['file' => 'required|file|max:10240']);
-
         $user = Auth::user();
         $file = $request->file('file');
-        $path = $file->store("uploads/{$user->id}", 'public');
+
+        $path = $file->store($user->id, 'private_uploads');
 
         CloudFile::create([
             'user_id'       => $user->id,
             'file_id'       => 'local-' . uniqid(),
             'name'          => $file->getClientOriginalName(),
-            'mime_type'     => $file->getClientMimeType(),
-            'web_view_link' => Storage::url($path),
+            'mime_type'     => $file->getMimeType(),
+            'web_view_link' => $path,
             'provider'      => 'local',
             'synced_at'     => now(),
         ]);
 
-
         return redirect()->route('documents.overview')->with('status', 'File uploaded successfully!');
+    }
+
+    /**
+     * Serveert een lokaal bestand met de meest robuuste methode om omgevingsproblemen te omzeilen.
+     */
+    public function serveLocalFile(CloudFile $file)
+    {
+        // 1. Security checks
+        if ($file->provider !== 'local' || $file->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        // 2. Bestandscheck
+        if (!Storage::disk('private_uploads')->exists($file->web_view_link)) {
+            abort(404, 'Bestand niet gevonden op de server.');
+        }
+
+        // 3. Robuuste serveer-methode
+        try {
+            // Haal het absolute C:\... pad op van de juiste disk
+            $fullPath = Storage::disk('private_uploads')->path($file->web_view_link);
+
+            // Bepaal de MIME-type direct van het bestand voor maximale betrouwbaarheid
+            $mimeType = mime_content_type($fullPath);
+
+            // Stuur de headers en de bestandsinhoud handmatig
+            header('Content-Type: ' . $mimeType);
+            header('Content-Length: ' . filesize($fullPath));
+
+            // Verwijder eventuele output buffering
+            ob_clean();
+            flush();
+
+            // Lees en output het bestand direct naar de browser.
+            // Dit is een heel laag niveau en omzeilt veel potentiele problemen.
+            readfile($fullPath);
+
+            // Zorg ervoor dat er hierna niks meer wordt uitgevoerd.
+            exit;
+
+        } catch (Exception $e) {
+            Log::error('Fout bij handmatig serveren van bestand: ' . $e->getMessage());
+            abort(500, 'Kon het bestand niet lezen. Controleer storage/logs/laravel.log');
+        }
     }
 
     /**
@@ -138,14 +182,14 @@ class DocumentController extends Controller
                     ['name' => $file->name, 'mime_type' => $file->mimeType, 'web_view_link' => $file->webViewLink, 'synced_at' => now()]
                 );
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('Google Sync Failed', ['message' => $e->getMessage()]);
         }
     }
 
 
     /**
-     * NIEUW TOEGEVOEGD: Synchroniseert bestanden van Microsoft OneDrive.
+     * Synchroniseert bestanden van Microsoft OneDrive.
      */
     private function syncMicrosoftFiles($user)
     {
@@ -156,7 +200,6 @@ class DocumentController extends Controller
         try {
             $accessToken = $user->microsoft_access_token;
 
-            // Controleer of de token is verlopen en vernieuw indien nodig
             if (time() >= ($user->microsoft_token_expiry ?? 0) - 60) {
                 $oauthClient = $this->getMicrosoftClient();
                 $newToken = $oauthClient->getAccessToken('refresh_token', ['refresh_token' => $user->microsoft_refresh_token]);
@@ -166,7 +209,7 @@ class DocumentController extends Controller
                     'microsoft_token_expiry' => $newToken->getExpires(),
                     'microsoft_refresh_token' => $newToken->getRefreshToken() ?? $user->microsoft_refresh_token,
                 ]);
-                $user->refresh(); // Herlaad het user model met de nieuwe data
+                $user->refresh();
                 $accessToken = $newToken->getToken();
             }
 
@@ -180,24 +223,23 @@ class DocumentController extends Controller
                     ['name' => $item->getName(), 'mime_type' => $item->getFile() ? $item->getFile()->getMimeType() : 'folder/microsoft', 'web_view_link' => $item->getWebUrl(), 'synced_at' => now()]
                 );
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('Microsoft Sync Failed', ['message' => $e->getMessage()]);
-            // Optioneel: Stuur een foutmelding terug naar de gebruiker
             return redirect()->route('documents.overview')->with('error', 'Microsoft sync is mislukt: ' . $e->getMessage());
         }
     }
 
     /**
-     * NIEUW TOEGEVOEGD: Helper-methode om de Microsoft client aan te maken.
+     * Helper-methode om de Microsoft client aan te maken.
      */
     private function getMicrosoftClient()
     {
         return new MicrosoftClient([
-            'clientId'                => config('services.microsoft.client_id'),
-            'clientSecret'            => config('services.microsoft.client_secret'),
-            'redirectUri'             => config('services.microsoft.redirect'),
-            'urlAuthorize'            => 'https://login.microsoftonline.com/' . config('services.microsoft.tenant', 'common') . '/oauth2/v2.0/authorize',
-            'urlAccessToken'          => 'https://login.microsoftonline.com/' . config('services.microsoft.tenant', 'common') . '/oauth2/v2.0/token',
+            'clientId' => config('services.microsoft.client_id'),
+            'clientSecret' => config('services.microsoft.client_secret'),
+            'redirectUri' => config('services.microsoft.redirect'),
+            'urlAuthorize' => 'https://login.microsoftonline.com/' . config('services.microsoft.tenant', 'common') . '/oauth2/v2.0/authorize',
+            'urlAccessToken' => 'https://login.microsoftonline.com/' . config('services.microsoft.tenant', 'common') . '/oauth2/v2.0/token',
             'urlResourceOwnerDetails' => '',
         ]);
     }
