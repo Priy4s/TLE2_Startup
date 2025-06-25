@@ -24,6 +24,10 @@ Route::get('/debug-token', function () {
     return session('ms_token') ?: 'Geen token gevonden';
 });
 
+Route::fallback(function() {
+    return response()->view('error.404', [], 404);
+});
+
 // Public routes
 Route::get('/', [WorkspaceController::class, 'index'])->middleware('auth')->name('/');
 
