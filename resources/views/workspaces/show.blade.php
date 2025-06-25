@@ -86,3 +86,17 @@
         @endforeach
     </ul>
 </x-nav>
+
+<!-- Calendar items -->
+<h2 class="text-xl font-semibold mb-2">Events</h2>
+@if($events->count())
+    <ul class="space-y-2">
+        @foreach($events as $event)
+            <li class="border p-3 rounded flex justify-between items-center">
+                {{ $event->event }} on {{ $event->date }}
+            </li>
+        @endforeach
+    </ul>
+@else
+    <p class="text-gray-500 mt-2">Er zijn nog geen events voor deze workspace.</p>
+@endif
