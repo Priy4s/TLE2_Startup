@@ -7,7 +7,17 @@
                 <ul>
                     @forelse($workspace->cloudFiles as $file)
                         <li class="bg-articleBlue dark:bg-accentBlue p-3 rounded flex justify-between items-center mb-2">
-                            <a href="{{ $file->web_view_link }}" target="_blank">{{ $file->name }}</a>
+                            @if ($file->provider === 'local')
+                                {{-- Veilige link voor lokale bestanden --}}
+                                <a href="{{ route('documents.serve.local', $file->id) }}" target="_blank" aria-label="{{ $file->name }}" class="max-w-[12vw] overflow-hidden overflow-ellipsis whitespace-nowrap text-viridian hover:text-accentBlue dark:text-greenLight dark:hover:text-articleBlue">
+                                    {{ $file->name }} {{-- De zichtbare tekst van de link --}}
+                                </a> {{-- Correcte sluiting van de link --}}
+                            @else
+                                {{-- Directe link voor cloud-bestanden --}}
+                                <a href="{{ $file->web_view_link }}" target="_blank" aria-label="{{ $file->name }}" class="max-w-[12vw] overflow-hidden overflow-ellipsis whitespace-nowrap text-viridian hover:text-accentBlue dark:text-greenLight dark:hover:text-articleBlue">
+                                    {{ $file->name }} {{-- De zichtbare tekst van de link --}}
+                                </a> {{-- Correcte sluiting van de link --}}
+                            @endif
                             <div class="flex">
                                 <div class="w-5 flex justify-between mr-4">
                                     @if($file->mime_type == 'application/vnd.google-apps.spreadsheet')
