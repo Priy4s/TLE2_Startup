@@ -9,7 +9,7 @@ class WorkspaceController extends Controller
 {
     public function index()
     {
-        $workspaces = Workspace::all();
+        $workspaces = Workspace::where('user_id', auth()->id())->get();
         return view('workspaces.index', compact('workspaces'));
     }
 
