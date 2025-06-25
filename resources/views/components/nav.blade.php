@@ -5,6 +5,7 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
@@ -39,9 +40,9 @@
     </div>
     <div>
         @auth
-            <a href="{{ route('profile.edit') }}" class="font-medium text-3xl">Profile</a>
+            <a href="{{ route('profile.edit') }}" class="font-medium text-3xl fixed bottom-6 left-6 z-50 hover:underline">Profile</a>
         @else
-            <a href="{{ route('login') }}" class="font-medium text-3xl">Login</a>
+            <a href="{{ route('login') }}" class="font-medium text-3xl fixed bottom-6 left-6 z-50 hover:underline">Login</a>
         @endauth
     </div>
 </nav>

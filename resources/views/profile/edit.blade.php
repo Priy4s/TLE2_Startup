@@ -49,6 +49,12 @@
                     </a>
                 @endif
             </div>
+            <form method="POST" action="{{ route('logout') }}" class="mt-12">
+                @csrf
+                <button type="submit" class="text-red-500 hover:text-red-700">
+                    Logout
+                </button>
+            </form>
         </div>
     </div>
 </x-nav>

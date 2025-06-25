@@ -10,5 +10,10 @@ class Calendar extends Model
     use HasFactory;
 
     protected $table = 'calendars';
-    protected $fillable = ['event', 'date'];
+    protected $fillable = ['event', 'date', 'user_id', 'workspace_id'];
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+        return $this->belongsTo(Workspace::class);
+    }
 }

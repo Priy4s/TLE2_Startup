@@ -5,6 +5,7 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
@@ -21,24 +22,27 @@
     <!-- Menu -->
     <ul class="mt-10 flex flex-col">
         <li class="inline my-4">
-            <a href="" class="font-medium text-3xl">Dashboard</a>
-        </li>
-        <li class="inline my-4">
-            <a href="" class="font-medium text-3xl">Documents</a>
+            <a href="<?php echo e(route('documents.overview')); ?>" class="font-medium text-3xl">Documents</a>
         </li>
         <li class="inline my-4">
             <a href="<?php echo e(route('workspaces.index')); ?>" class="font-medium text-3xl">Workspaces</a>
         </li>
         <li class="inline my-4">
             <a href="<?php echo e(route('calendar.index')); ?>" class="font-medium text-3xl">Calendar</a>
+
         </li>
+        <li class="inline my-4">
+            <a href="<?php echo e(route('kikkerman.index')); ?>" class="font-medium text-3xl">Kikkerman</a>
+
+        </li>
+
     </ul>
     </div>
     <div>
         <?php if(auth()->guard()->check()): ?>
-            <p>Profile</p>
+            <a href="<?php echo e(route('profile.edit')); ?>" class="font-medium text-3xl">Profile</a>
         <?php else: ?>
-            <p>Login</p>
+            <a href="<?php echo e(route('login')); ?>" class="font-medium text-3xl">Login</a>
         <?php endif; ?>
     </div>
 </nav>
